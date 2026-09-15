@@ -11,6 +11,8 @@
 | `server/saju.ts` | Gemini 호출 및 폴백 해석 로직 (프런트/백엔드 공용) |
 | `api/` | Vercel 서버리스 함수 (`/api/health`, `/api/saju/interpret`, `/api/saju/chat`) |
 | `server.ts` | 로컬 개발 전용 Express + Vite 미들웨어 서버 |
+| `src/embed.tsx`, `vite.embed.config.ts` | 아임웹 등 외부 페이지 삽입용 단일 파일 번들 |
+| `shared/fallbackInterpretation.ts` | AI 서버가 없을 때 쓰는 내장 해석 (서버·브라우저 공용) |
 
 `GEMINI_API_KEY`는 서버 측에서만 사용되므로 브라우저 번들에 노출되지 않습니다.
 키가 없으면 각 API는 내장된 결정적(deterministic) 해석으로 자동 폴백합니다.
@@ -25,7 +27,15 @@ cp .env.example .env.local   # GEMINI_API_KEY 값을 채워 넣으세요
 npm run dev                  # http://localhost:3000
 ```
 
-기타 스크립트: `npm run build` (프로덕션 빌드), `npm run preview`, `npm run lint` (타입 검사).
+기타 스크립트:
+
+| 명령 | 설명 |
+| --- | --- |
+| `npm run build` | 사이트 + 임베드 번들을 함께 빌드 (Vercel이 실행) |
+| `npm run build:site` | SPA만 빌드 → `dist/` |
+| `npm run build:embed` | 아임웹 임베드 번들만 빌드 → `dist-embed/myeonggyeol.js` |
+| `npm run preview` | 빌드 결과 미리보기 |
+| `npm run lint` | 타입 검사 |
 
 ## Vercel 배포
 
@@ -55,6 +65,21 @@ vercel --prod
 curl https://<your-project>.vercel.app/api/health
 # {"status":"ok","service":"myeonggyeol-saju-api"}
 ```
+
+## 아임웹(Imweb)에 삽입하기
+
+아임웹은 Node 서버를 올릴 수 없으므로, 호스팅형 페이지에 그대로 붙일 수 있는
+단일 파일 번들을 따로 빌드합니다. 붙여넣을 코드와 충돌 대응 내역은
+[docs/IMWEB.md](docs/IMWEB.md) 를 참고하세요.
+
+```html
+<div id="myeonggyeol-app"></div>
+<script src="https://<your-project>.vercel.app/myeonggyeol.js"></script>
+```
+
+이 번들은 CSS가 `#myeonggyeol-app` 하위로 한정되어 아임웹 페이지 스타일을
+건드리지 않으며, AI 서버에 닿지 못해도 내장 해석으로 자동 대체되어 오류 없이
+동작합니다.
 
 ## 참고
 

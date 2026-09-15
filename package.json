@@ -4,11 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "build": "vite build && npm run build:embed && cp dist-embed/myeonggyeol.js dist/myeonggyeol.js",
+    "build:embed": "vite build --config vite.embed.config.ts",
+    "build:site": "vite build",
+    "clean": "rm -rf dist dist-embed",
     "dev": "tsx server.ts",
-    "build": "vite build",
-    "preview": "vite preview",
-    "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -28,6 +30,7 @@
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "postcss": "^8.5.3",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",

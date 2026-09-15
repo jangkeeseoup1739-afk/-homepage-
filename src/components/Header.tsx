@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavClick, activeSection }) => 
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0D0E14]/90 backdrop-blur-md border-b border-[#262432]">
+    <header data-myeonggyeol-header className="sticky top-0 z-50 bg-[#0D0E14]/90 backdrop-blur-md border-b border-[#262432]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
         {/* Logo */}
         <div 

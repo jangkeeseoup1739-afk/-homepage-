@@ -7,6 +7,8 @@ import { SpecialFeatures } from './components/SpecialFeatures';
 import { Footer } from './components/Footer';
 import { SajuInput, SajuResult, InterpretationResponse } from './types';
 import { calculateManse } from './utils/manseEngine';
+import { postJson } from './config/api';
+import { generateLocalFallbackInterpretation } from '../shared/fallbackInterpretation';
 import { BookOpen, Sparkles, KeyRound, CreditCard, Cpu, Layers } from 'lucide-react';
 
 export default function App() {
@@ -31,22 +33,15 @@ export default function App() {
       }
     }, 100);
 
-    // 2. Call AI interpretation API
+    // 2. Call AI interpretation API. When it is unreachable — e.g. the bundle
+    //    is embedded on a host with no backend — fall back to the local
+    //    reading so the result view is never left empty.
     try {
-      const response = await fetch('/api/saju/interpret', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ saju: calculated }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch AI interpretation');
-      }
-
-      const data: InterpretationResponse = await response.json();
+      const data = await postJson<InterpretationResponse>('/api/saju/interpret', { saju: calculated });
       setInterpretation(data);
     } catch (err) {
-      console.error('AI Interpretation error:', err);
+      console.error('AI Interpretation error, using local reading:', err);
+      setInterpretation(generateLocalFallbackInterpretation(calculated) as InterpretationResponse);
     } finally {
       setIsLoading(false);
     }

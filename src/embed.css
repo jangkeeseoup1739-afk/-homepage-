@@ -1,0 +1,54 @@
+/* `important` makes utilities win over host rules that use !important —
+   Imweb themes commonly do. It is safe here because the scoping step below
+   confines every selector to #myeonggyeol-app. */
+@import "tailwindcss" important;
+
+/* Every rule below is rewritten by the CSS scoping step in
+   vite.embed.config.ts so it only applies inside #myeonggyeol-app.
+   That keeps Tailwind's preflight from resetting the host page (Imweb
+   ships its own reset, theme CSS and jQuery widgets) while still giving
+   the widget a clean baseline of its own. */
+
+@layer base {
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.font-serif-kr {
+  font-family: 'Noto Serif KR', Georgia, serif;
+}
+
+/* Scoped preflight applies to descendants of the container; the container
+   itself needs the same baseline explicitly. */
+#myeonggyeol-app {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+  line-height: 1.5;
+  text-align: left;
+  letter-spacing: normal;
+  word-break: normal;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The widget lives inside someone else's page, so its stacking context must
+   not escape: without this, the header's z-50 would compete with the host's
+   own navigation. */
+#myeonggyeol-app {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+
+/* The header is sticky in the standalone site, where it is the only one on
+   the page. Embedded, it would pin over the host's navigation while the
+   widget scrolls past, so it scrolls with the content instead.
+   The doubled id outweighs the scoped `.sticky` utility, which carries
+   !important in this build. */
+#myeonggyeol-app#myeonggyeol-app [data-myeonggyeol-header] {
+  position: relative !important;
+  top: auto !important;
+  z-index: 1 !important;
+}

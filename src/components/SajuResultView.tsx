@@ -24,6 +24,8 @@ import {
   ArrowDown
 } from 'lucide-react';
 import { LackingElementRemedyView } from './LackingElementRemedyView';
+import { postJson } from '../config/api';
+import { generateLocalChatReply } from '../../shared/fallbackInterpretation';
 
 interface SajuResultViewProps {
   saju: SajuResult;
@@ -75,16 +77,11 @@ export const SajuResultView: React.FC<SajuResultViewProps> = ({
     setIsChatLoading(true);
 
     try {
-      const res = await fetch('/api/saju/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: userMsg,
-          saju,
-          history: updatedMessages,
-        }),
+      const data = await postJson<{ reply?: string }>('/api/saju/chat', {
+        message: userMsg,
+        saju,
+        history: updatedMessages,
       });
-      const data = await res.json();
       setChatMessages((prev) => [
         ...prev, 
         { 
@@ -93,12 +90,10 @@ export const SajuResultView: React.FC<SajuResultViewProps> = ({
         }
       ]);
     } catch (err) {
+      console.error('Chat error, using local reply:', err);
       setChatMessages((prev) => [
         ...prev,
-        { 
-          sender: 'ai', 
-          text: '사주의 오행 균형을 살피어 볼 때, 스스로의 신념을 굳건히 지키고 때를 기다리시면 반드시 좋은 귀인을 만나 큰 조력을 얻게 됩니다.' 
-        },
+        { sender: 'ai', text: generateLocalChatReply(saju) },
       ]);
     } finally {
       setIsChatLoading(false);
