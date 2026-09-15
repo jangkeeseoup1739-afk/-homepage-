@@ -1,0 +1,6 @@
+{
+  "name": "명결 - 전통 AI 사주",
+  "description": "명(命)을 풀고, 사람과 운을 연결하는 품격 있는 전통 AI 사주 풀이 서비스",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
