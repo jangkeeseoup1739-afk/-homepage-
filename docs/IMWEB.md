@@ -11,7 +11,7 @@ CSS 리셋·테마 스타일·jQuery 위젯이 올라가 있습니다. AI Studio
 | 넣는 것 | [`docs/imweb-standalone.html`](./imweb-standalone.html) 전체 복사 | `<script src="...">` 한 줄 |
 | 빌드 | 필요 없음 | `npm run build:embed` 필요 |
 | 서버 배포 | 필요 없음 | Vercel 배포 필요 |
-| 붙여넣는 양 | 약 96KB | 2줄 |
+| 붙여넣는 양 | 약 310KB (배경 사진 포함) | 2줄 |
 | AI 풀이 | 내장 해설 (서버 연결 시 자동 전환) | 배포한 Gemini API 사용 |
 | 스타일 격리 | Shadow DOM (완전 분리) | CSS 선택자 범위 한정 |
 
@@ -40,8 +40,13 @@ Vercel 배포를 마쳤다면, 붙여넣은 코드 **맨 위**에 한 줄만 추
 
 ### (선택) 히어로 배경을 내 사진으로
 
-기본 배경은 일월오봉도(日月五峯圖)를 본뜬 내장 SVG라서 외부 이미지를 전혀
-불러오지 않습니다. 직접 올린 사진을 쓰려면:
+원본 한복·한옥 배경 사진이 코드 안에 직접 담겨 있습니다(원본 879KB를 같은
+크기 1376px로 다시 압축해 162KB). 외부 주소를 부르지 않으므로 아임웹에서
+사진이 깨지거나 사라지지 않고, 따로 이미지를 올릴 필요도 없습니다. 사진 뒤에는
+일월오봉도(日月五峯圖)를 본뜬 SVG 배경이 한 겹 더 깔려 있어, 혹시 사진을
+불러오지 못해도 배경이 비어 보이지 않습니다.
+
+다른 사진으로 바꾸려면:
 
 ```html
 <script>window.MYEONGGYEOL_HERO_IMAGE = 'https://내사이트.com/hero.jpg';</script>
@@ -60,6 +65,7 @@ Vercel 배포를 마쳤다면, 붙여넣은 코드 **맨 위**에 한 줄만 추
 | 구형 브라우저에 Shadow DOM이 없음 | 모든 선택자를 `#myeonggyeol-widget` 하위로 한정한 폴백 스타일로 자동 전환 |
 | React·Vite·TypeScript는 아임웹에서 빌드할 수 없음 | 빌드가 필요 없는 순수 JavaScript로 다시 작성 |
 | 외부 스크립트/CSS/이미지가 아임웹 정책이나 네트워크에 막힘 | 외부 리소스를 하나도 쓰지 않음 (웹폰트만 선택적, 실패해도 정상 표시) |
+| 히어로 배경 사진이 경로를 못 찾아 사라짐 | 사진을 코드 안에 data URI로 담고, 뒤에 SVG 배경을 한 겹 더 깖 |
 | 아임웹 페이지의 `<form>` 안에 위젯이 들어가면 중첩 폼이 깨지고 엔터키에 페이지가 새로고침됨 | `<form>`을 쓰지 않고 버튼 클릭·엔터키를 직접 처리 |
 | 위젯 헤더의 `sticky`·`z-index`가 아임웹 상단 메뉴를 덮음 | 헤더 고정을 풀고 `isolation: isolate` 로 z-index를 위젯 안에 가둠 |
 | 서버가 없어서 `/api/...` 호출이 404 | 만세력은 100% 브라우저 계산, AI 풀이는 내장 해설로 자동 대체 |
@@ -76,6 +82,9 @@ Vercel 배포를 마쳤다면, 붙여넣은 코드 **맨 위**에 한 줄만 추
   (1930~2026년 × 12개월 × 10일 × 성별 × 시간 미상 여부)
 - 위젯 삽입 전후로 호스트 페이지의 계산된 스타일이 **완전히 동일**
 - 콘솔 오류 0건, 모바일(390px) 가로 스크롤 0px
+- 배경 사진이 코드 안에서 정상 표시되고, 호스트의
+  `img { border:3px solid red !important }` 가 위젯 사진에는 닿지 않음
+- 웹폰트 2개를 제외하면 외부 네트워크 요청 0건
 - AI 서버 정상 / 500 오류 / 없는 주소 / Shadow DOM 미지원 — 네 경우 모두
   오류 없이 결과 화면 표시
 
@@ -116,6 +125,23 @@ Vercel 배포를 마쳤다면, 붙여넣은 코드 **맨 위**에 한 줄만 추
 - 번들은 약 1.5MB이고 대부분이 인라인된 히어로 배경 이미지입니다. 더 가볍게
   하려면 이미지를 압축한 뒤 다시 빌드하세요.
 - 스타일을 바꿀 때마다 `npm run build:embed` 를 다시 돌리고 재배포해야 합니다.
+
+### 배경 사진을 다시 압축하려면
+
+`docs/imweb-standalone.html` 안의 `HERO_PHOTO` 값은 아래처럼 만들었습니다.
+사진을 교체하거나 더 줄이고 싶을 때 같은 방법을 쓰면 됩니다.
+
+```python
+from PIL import Image
+import io, base64
+im = Image.open('src/assets/images/hanbok_wide_panoramic_1789361790745.jpg').convert('RGB')
+buf = io.BytesIO()
+im.save(buf, 'JPEG', quality=72, optimize=True, subsampling=2)
+print('data:image/jpeg;base64,' + base64.b64encode(buf.getvalue()).decode())
+```
+
+WebP로 바꾸면 절반 크기가 되지만 구형 사파리(iOS 13 이하)에서 사진이 깨지므로
+JPEG을 씁니다.
 
 ---
 
