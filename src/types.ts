@@ -29,7 +29,10 @@ export interface Pillar {
 export interface SajuResult {
   name: string;
   gender: Gender;
+  /** 계산에 실제로 쓰인 양력 날짜. 음력으로 입력해도 여기는 양력입니다. */
   solarDate: string;
+  /** 음력으로 입력한 경우 그 음력 날짜(예: '음력 1988년 윤3월 21일'). */
+  lunarDate?: string;
   birthTimeStr: string;
   isTimeUnknown: boolean;
   region: string;
@@ -61,6 +64,8 @@ export interface SajuInput {
   name: string;
   gender: Gender;
   calendarType: CalendarType;
+  /** 음력 입력일 때 그 달이 윤달인지 여부. 양력이면 무시됩니다. */
+  isLeapMonth?: boolean;
   year: number;
   month: number;
   day: number;

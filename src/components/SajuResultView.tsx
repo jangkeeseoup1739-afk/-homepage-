@@ -185,6 +185,11 @@ export const SajuResultView: React.FC<SajuResultViewProps> = ({
             <p className="text-sm sm:text-base text-[#F1F5F9] font-normal">
               양력 {saju.solarDate} ({saju.birthTimeStr}) · {saju.gender === 'male' ? '남성' : '여성'} · {saju.region}
             </p>
+            {saju.lunarDate && (
+              <p className="text-xs sm:text-sm text-[#F5D298] font-medium">
+                {saju.lunarDate}로 입력하신 날짜를 양력으로 환산해 계산했습니다.
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-3">

@@ -1,4 +1,5 @@
 import { ElementType, FiveElementsCount, Pillar, SajuInput, SajuResult } from '../types';
+import { lunarToSolar } from './lunarCalendar';
 
 export const STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 export const STEMS_KR = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
@@ -199,7 +200,24 @@ function getHourPillarIndices(dayStemIdx: number, hour: number, minute: number, 
 }
 
 export function calculateManse(input: SajuInput): SajuResult {
-  const { name, gender, year, month, day, hour, minute, isTimeUnknown, region } = input;
+  const { name, gender, hour, minute, isTimeUnknown, region } = input;
+
+  // 사주는 전부 양력(절기) 기준으로 계산합니다. 음력으로 입력받았으면
+  // 먼저 양력으로 환산해야 하며, 환산하지 않고 그대로 계산하면 사주
+  // 네 기둥이 통째로 틀립니다.
+  let { year, month, day } = input;
+  let lunarDate: string | undefined;
+  if (input.calendarType === 'lunar') {
+    const converted = lunarToSolar(year, month, day, !!input.isLeapMonth);
+    if (converted) {
+      lunarDate = `음력 ${year}년 ${input.isLeapMonth ? '윤' : ''}${month}월 ${day}일`;
+      year = converted.year;
+      month = converted.month;
+      day = converted.day;
+    }
+    // 환산할 수 없는 날짜(표 범위 밖, 없는 윤달 등)라면 입력값을 양력으로
+    // 보고 계산합니다. 폼에서 미리 걸러지므로 실제로는 닿지 않는 갈래입니다.
+  }
 
   // 1. 년주 계산 (기본 1984년 甲子年 기준)
   const baseYearDiff = year - 1984;
@@ -323,6 +341,7 @@ export function calculateManse(input: SajuInput): SajuResult {
     name: name || '귀하',
     gender,
     solarDate: `${year}년 ${month}월 ${day}일`,
+    lunarDate,
     birthTimeStr: isTimeUnknown ? '시간 미상' : `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`,
     isTimeUnknown,
     region,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Sparkles, ShieldCheck, ArrowRight, User, ChevronDown } from 'lucide-react';
 import { SajuInput, Gender, CalendarType } from '../types';
+import { getLeapMonth, getLunarMonthDays, LUNAR_MAX_YEAR, LUNAR_MIN_YEAR } from '../utils/lunarCalendar';
 import wideHeroImage from '../assets/images/hanbok_wide_panoramic_1789361790745.jpg';
 
 interface HeroSectionProps {
@@ -20,6 +21,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSubmit, isLoading })
   const [minute, setMinute] = useState<number>(30);
   const [isTimeUnknown, setIsTimeUnknown] = useState(false);
   const [region, setRegion] = useState('서울/경기 (127.5도)');
+  const [isLeapMonth, setIsLeapMonth] = useState(false);
+
+  const isLunar = calendarType === 'lunar';
+  // 그 해에 든 윤달(없으면 0). 윤달은 해마다 드는 달이 달라서, 고른 연·월에
+  // 실제로 윤달이 있을 때만 선택할 수 있게 합니다.
+  const leapMonthOfYear = isLunar ? getLeapMonth(year) : 0;
+  const canPickLeapMonth = leapMonthOfYear === month;
+  const lunarOutOfRange = isLunar && (year < LUNAR_MIN_YEAR || year > LUNAR_MAX_YEAR);
+
+  // 고른 달에 실제로 있는 날짜 수. 음력은 29·30일, 양력은 28~31일입니다.
+  const daysInMonth = isLunar
+    ? getLunarMonthDays(year, month, isLeapMonth && canPickLeapMonth) || 30
+    : new Date(year, month, 0).getDate();
+
+  // 달을 바꿨는데 윤달이 없어졌거나, 날짜가 그 달에 없는 날이면 되돌립니다.
+  React.useEffect(() => {
+    if (isLeapMonth && !canPickLeapMonth) setIsLeapMonth(false);
+  }, [isLeapMonth, canPickLeapMonth]);
+  React.useEffect(() => {
+    if (day > daysInMonth) setDay(daysInMonth);
+  }, [day, daysInMonth]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,9 +49,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSubmit, isLoading })
       name: name.trim() || '의뢰인',
       gender,
       calendarType,
+      isLeapMonth: isLunar && canPickLeapMonth && isLeapMonth,
       year,
       month,
-      day,
+      day: Math.min(day, daysInMonth),
       hour,
       minute,
       isTimeUnknown,
@@ -48,8 +71,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSubmit, isLoading })
   const yearOptions = Array.from({ length: 95 }, (_, i) => currentYear - i);
   // Month options (1 ~ 12)
   const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1);
-  // Day options (1 ~ 31)
-  const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
+  // Day options — 고른 달에 실제로 있는 날까지만
+  const dayOptions = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   // Hour options (0 ~ 23)
   const hourOptions = [
     { value: 0, label: '자시 (23:30 ~ 01:29)' },
@@ -257,9 +280,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSubmit, isLoading })
                         : 'bg-[#0B0C10] text-[#CBD5E1] border border-[#3B384D] hover:text-[#FFFFFF]'
                     }`}
                   >
-                    음력 (Lunar 평달)
+                    음력 (Lunar)
                   </button>
                 </div>
+
+                {isLunar && (
+                  <div className="mt-2.5 space-y-2">
+                    {canPickLeapMonth && (
+                      <label className="flex items-center gap-2 text-xs sm:text-sm text-[#F5D298] font-medium cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id="leap-month-check"
+                          checked={isLeapMonth}
+                          onChange={(e) => setIsLeapMonth(e.target.checked)}
+                          className="rounded border-[#3B384D] bg-[#0B0C10] text-[#D4AF7C] focus:ring-0 w-4 h-4"
+                        />
+                        <span>{year}년에는 윤{leapMonthOfYear}월이 있습니다 — 윤달로 태어나셨다면 체크해 주세요.</span>
+                      </label>
+                    )}
+                    {lunarOutOfRange && (
+                      <p className="text-xs sm:text-sm text-rose-300">
+                        음력 환산은 {LUNAR_MIN_YEAR}~{LUNAR_MAX_YEAR}년만 지원합니다. 이 연도는 양력으로 입력해 주세요.
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Row 3: Birth Date (Year, Month, Day) */}

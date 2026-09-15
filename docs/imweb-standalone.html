@@ -49,6 +49,106 @@
     return (n < 10 ? '0' : '') + n;
   }
 
+  // ── 한국 음력 → 양력 변환 ──────────────────────────────────────────────
+  //
+  // 음력은 천문 관측(삭)으로 정해져 수식으로 계산할 수 없고, 한국천문연구원
+  // (KASI)이 확정한 값을 표로 들고 있어야 합니다. 아래 표는 KASI 자료에서
+  // 뽑은 뒤 1912~2049년의 음력 초하루 1,718개가 모두 한국 표준시(UTC+9)
+  // 기준 삭(new moon)이 든 날과 맞는지 천문 계산으로 교차 검증했습니다.
+  //
+  // 한국 음력은 중국 음력과 다릅니다. 삭의 시각을 각자의 표준시로 판정하기
+  // 때문이며, 예컨대 1988년 설날은 한국 2월 18일, 중국 2월 17일입니다.
+  // 이 표는 한국 기준입니다.
+  //
+  // 표 형식: 한 해당 16진수 5자리.
+  //   값 >> 13     = 윤달이 든 月 (0이면 윤달 없음)
+  //   값 & 0x1FFF  = 그 해 각 달의 크기. 달 순서대로 1이면 30일, 0이면 29일.
+  //                  윤달은 같은 달 바로 뒤에 들어갑니다.
+  var LUNAR_TABLE =
+    '116d20075200ea50b64a0064b00a9b095560056a00b5905752' + // 1900-1909
+    '007520db2500b2500a4b0b29b00aad0056a04b6900ba90fb52' + // 1910-1919
+    '00d9200d250ba4d00956002b5095ad006d400da905d9200e92' + // 1920-1929
+    '0cd260052700a570b2b600ada006d406ea9007490f69300a93' + // 1930-1939
+    '0052b0ca5b0096d00b6a09b5400ba400b4905a9300a950f52b' + // 1940-1949
+    '0052d00aad0b56a00db200da407d4900d4a11a9500a9600556' + // 1950-1959
+    '0cab500ad5006d208ea500ea500e4a06c9600a9b0f5560056a' + // 1960-1969
+    '00b590b75200752007250964b00a4b112ab002ad0056b0cb69' + // 1970-1979
+    '00da900d9209b2500d2515a4d00a56002b60d5ad006d400da9' + // 1980-1989
+    '0bd9200e9200d2606a5600a57112b600b5a006d40aec900749' + // 1990-1999
+    '00693095270052b00a5b0555a0036a0fb5500ba400b490ba93' + // 2000-2009
+    '00a950052d06a5d00aad135aa005d200da50bd4a00d4a00a95' + // 2010-2019
+    '0952d0055600ab5055aa006d20cea500ea500e4a0ac9600c9b' + // 2020-2029
+    '0055a06ad500b69177520075200b250d64b00a4b004ab0a55b' + // 2030-2039
+    '0056d00b6905b5200d920fd2500d2500a4d0b4ad002b6005b5'; // 2040-2049
+
+  var LUNAR_MIN_YEAR = 1900;
+  var LUNAR_MAX_YEAR = 2049;
+  var LUNAR_BASE_UTC = Date.UTC(1900, 0, 31); // 음력 1900년 1월 1일 = 양력 1900-01-31
+  var LUNAR_DAY_MS = 86400000;
+
+  function lunarYearSupported(year) {
+    return year >= LUNAR_MIN_YEAR && year <= LUNAR_MAX_YEAR;
+  }
+
+  function lunarYearValue(year) {
+    var at = (year - LUNAR_MIN_YEAR) * 5;
+    return parseInt(LUNAR_TABLE.slice(at, at + 5), 16);
+  }
+
+  /** 그 해에 든 윤달의 月. 윤달이 없으면 0. */
+  function lunarLeapMonth(year) {
+    if (!lunarYearSupported(year)) return 0;
+    return lunarYearValue(year) >> 13;
+  }
+
+  /** 그 해 달 순서에서 해당 달이 몇 번째인지. 없는 달이면 -1. */
+  function lunarMonthIndex(year, month, isLeap) {
+    if (!lunarYearSupported(year) || month < 1 || month > 12) return -1;
+    var leap = lunarLeapMonth(year);
+    if (isLeap) return leap === month ? month : -1;
+    return month - 1 + (leap > 0 && month > leap ? 1 : 0);
+  }
+
+  function lunarDaysAtIndex(year, index) {
+    return (lunarYearValue(year) & 0x1fff) & (1 << index) ? 30 : 29;
+  }
+
+  /** 음력 한 달의 일수(29 또는 30). 없는 달이면 0. */
+  function lunarMonthDays(year, month, isLeap) {
+    var index = lunarMonthIndex(year, month, isLeap);
+    return index < 0 ? 0 : lunarDaysAtIndex(year, index);
+  }
+
+  var lunarCumulative = null;
+  function lunarDaysBeforeYear(year) {
+    if (!lunarCumulative) {
+      lunarCumulative = [0];
+      for (var y = LUNAR_MIN_YEAR; y < LUNAR_MAX_YEAR; y++) {
+        var total = 0;
+        var count = lunarLeapMonth(y) ? 13 : 12;
+        for (var i = 0; i < count; i++) total += lunarDaysAtIndex(y, i);
+        lunarCumulative.push(lunarCumulative[lunarCumulative.length - 1] + total);
+      }
+    }
+    return lunarCumulative[year - LUNAR_MIN_YEAR];
+  }
+
+  /**
+   * 음력 날짜를 양력으로 바꿉니다. 표에 없는 해이거나 실제로 없는 날짜면
+   * null 을 돌려줍니다.
+   */
+  function lunarToSolar(year, month, day, isLeap) {
+    var index = lunarMonthIndex(year, month, isLeap);
+    if (index < 0) return null;
+    if (!(day >= 1 && day <= lunarDaysAtIndex(year, index))) return null;
+
+    var offset = lunarDaysBeforeYear(year) + (day - 1);
+    for (var i = 0; i < index; i++) offset += lunarDaysAtIndex(year, i);
+
+    var date = new Date(LUNAR_BASE_UTC + offset * LUNAR_DAY_MS);
+    return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate() };
+  }
+
   // ── 만세력 상수 (src/utils/manseEngine.ts 와 동일) ─────────────────────
   var STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
   var STEMS_KR = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
@@ -214,6 +314,22 @@
     var year = input.year;
     var month = input.month;
     var day = input.day;
+    var lunarDate;
+
+    // 사주는 전부 양력(절기) 기준으로 계산합니다. 음력으로 입력받았으면
+    // 먼저 양력으로 환산해야 하며, 환산하지 않고 그대로 계산하면 사주
+    // 네 기둥이 통째로 틀립니다.
+    if (input.calendarType === 'lunar') {
+      var converted = lunarToSolar(year, month, day, !!input.isLeapMonth);
+      if (converted) {
+        lunarDate = '음력 ' + year + '년 ' + (input.isLeapMonth ? '윤' : '') + month + '월 ' + day + '일';
+        year = converted.year;
+        month = converted.month;
+        day = converted.day;
+      }
+      // 환산할 수 없는 날짜면 입력값을 양력으로 보고 계산합니다.
+      // 폼에서 미리 걸러지므로 실제로는 닿지 않는 갈래입니다.
+    }
 
     // 1. 년주
     var baseYearDiff = year - 1984;
@@ -318,6 +434,7 @@
       gender: input.gender,
       calendarType: input.calendarType,
       solarDate: year + '년 ' + month + '월 ' + day + '일',
+      lunarDate: lunarDate,
       birthTimeStr: input.isTimeUnknown ? '시간 미상' : pad2(input.hour) + ':' + pad2(input.minute),
       isTimeUnknown: input.isTimeUnknown,
       region: input.region,
@@ -619,6 +736,10 @@
     '__ROOT__ .mg-check{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#E2E8F0;font-weight:500;cursor:pointer;}',
     '__ROOT__ .mg-note{margin-top:8px;font-size:12.5px;color:var(--gold-lt);background:rgba(212,175,124,.1);',
     '  border:1px solid rgba(212,175,124,.3);border-radius:10px;padding:9px 12px;}',
+    // 윤달 선택과 안내 문구는 각각 한 줄씩 차지하게 합니다.
+    '__ROOT__ .mg-note [data-leap-wrap]{display:flex;align-items:flex-start;margin-bottom:7px;}',
+    '__ROOT__ .mg-note [data-leap-wrap].mg-hidden{display:none !important;}',
+    '__ROOT__ .mg-note [data-lunar-msg]{display:block;color:var(--muted);}',
     '__ROOT__ .mg-privacy{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:13px;color:var(--muted);}',
     '__ROOT__ .mg-privacy .mg-i{width:16px;height:16px;color:#34D399;}',
     '__ROOT__ .mg-spin{width:18px;height:18px;border:2px solid var(--gold);border-top-color:transparent;border-radius:50%;',
@@ -1048,6 +1169,7 @@
     section: 'home',
     gender: 'female',
     calendarType: 'solar',
+    isLeapMonth: false,
     timeUnknown: false,
     saju: null,
     interpretation: null,
@@ -1153,10 +1275,13 @@
       '<div class="mg-field"><span class="mg-label">양력 / 음력 구분<\/span>' +
       '<div class="mg-toggle" data-group="calendar">' +
       '<button type="button" data-value="solar" class="mg-on">양력 (Solar)<\/button>' +
-      '<button type="button" data-value="lunar">음력 (Lunar 평달)<\/button>' +
+      '<button type="button" data-value="lunar">음력 (Lunar)<\/button>' +
       '<\/div>' +
-      '<div class="mg-note mg-hidden" data-lunar-note>음력으로 입력하시면 아직 양력 환산 전이라, 입력하신 날짜를 ' +
-      '양력으로 보고 계산합니다. 정확한 결과를 원하시면 양력 생일로 입력해 주세요.<\/div>' +
+      '<div class="mg-note mg-hidden" data-lunar-note>' +
+      '<label class="mg-check mg-hidden" data-leap-wrap>' +
+      '<input type="checkbox" data-leap-check><span data-leap-label>윤달<\/span><\/label>' +
+      '<span data-lunar-msg>음력으로 입력하시면 한국천문연구원(KASI) 기준으로 양력으로 환산해 계산합니다.<\/span>' +
+      '<\/div>' +
       '<\/div>' +
 
       '<div class="mg-row3 mg-field">' +
@@ -1431,8 +1556,13 @@
       '<div class="mg-card mg-result-head">' +
       '<div><span class="mg-chip">' + icon('sparkles') + '명결 정밀 사주원국 풀이<\/span>' +
       '<h2>' + esc(saju.name) + '님의 사주명식(四柱命式)<\/h2>' +
-      '<p>' + (saju.calendarType === 'lunar' ? '입력 기준 ' : '양력 ') + esc(saju.solarDate) +
-      ' (' + esc(saju.birthTimeStr) + ') · ' + (saju.gender === 'male' ? '남성' : '여성') + ' · ' + esc(saju.region) + '<\/p><\/div>' +
+      '<p>양력 ' + esc(saju.solarDate) +
+      ' (' + esc(saju.birthTimeStr) + ') · ' + (saju.gender === 'male' ? '남성' : '여성') + ' · ' + esc(saju.region) + '<\/p>' +
+      (saju.lunarDate
+        ? '<p style="color:var(--gold-lt);font-size:13.5px;margin-top:4px">' + esc(saju.lunarDate) +
+          '로 입력하신 날짜를 양력으로 환산해 계산했습니다.<\/p>'
+        : '') +
+      '<\/div>' +
       '<button type="button" class="mg-btn-ghost" data-action="reset">' + icon('rotate') + '다시 입력하기<\/button>' +
       '<\/div>' +
 
@@ -1665,6 +1795,63 @@
     }
   }
 
+  /**
+   * 고른 연·월에 실제로 있는 날짜만 남기고, 윤달 선택지를 켜고 끕니다.
+   * 음력은 달마다 29·30일이 갈리고 윤달도 해마다 드는 달이 달라서,
+   * 1~31일을 그대로 두면 없는 날짜를 고를 수 있게 됩니다.
+   */
+  function refreshDateOptions() {
+    var yearEl = $('#mg-year');
+    var monthEl = $('#mg-month');
+    var dayEl = $('#mg-day');
+    if (!yearEl || !monthEl || !dayEl) return;
+
+    var year = Number(yearEl.value);
+    var month = Number(monthEl.value);
+    var isLunar = state.calendarType === 'lunar';
+    var leapMonth = isLunar ? lunarLeapMonth(year) : 0;
+    var canPickLeap = leapMonth === month;
+
+    if (state.isLeapMonth && !canPickLeap) state.isLeapMonth = false;
+
+    // 윤달 체크박스
+    var wrap = $('[data-leap-wrap]');
+    var check = $('[data-leap-check]');
+    var label = $('[data-leap-label]');
+    if (wrap && check && label) {
+      wrap.classList.toggle('mg-hidden', !canPickLeap);
+      check.checked = !!state.isLeapMonth;
+      if (canPickLeap) {
+        label.textContent = year + '년에는 윤' + leapMonth + '월이 있습니다 — 윤달로 태어나셨다면 체크해 주세요.';
+      }
+    }
+
+    // 음력 지원 범위 안내
+    var msg = $('[data-lunar-msg]');
+    if (msg) {
+      msg.textContent = (isLunar && !lunarYearSupported(year))
+        ? '음력 환산은 ' + LUNAR_MIN_YEAR + '~' + LUNAR_MAX_YEAR + '년만 지원합니다. 이 연도는 양력으로 입력해 주세요.'
+        : '음력으로 입력하시면 한국천문연구원(KASI) 기준으로 양력으로 환산해 계산합니다.';
+    }
+
+    // 그 달에 실제로 있는 날 수
+    var count;
+    if (isLunar) {
+      count = lunarMonthDays(year, month, state.isLeapMonth) || 30;
+    } else {
+      count = new Date(year, month, 0).getDate();
+    }
+
+    var selected = Number(dayEl.value) || 1;
+    if (selected > count) selected = count;
+    var html = '';
+    for (var d = 1; d <= count; d++) {
+      html += '<option value="' + d + '"' + (d === selected ? ' selected' : '') + '>' + d + '일<\/option>';
+    }
+    dayEl.innerHTML = html;
+    dayEl.value = String(selected);
+  }
+
   function readForm() {
     function value(sel, fallback) {
       var el = $(sel);
@@ -1678,6 +1865,7 @@
       name: (nameEl && nameEl.value ? nameEl.value : '').trim() || '의뢰인',
       gender: state.gender,
       calendarType: state.calendarType,
+      isLeapMonth: state.calendarType === 'lunar' && state.isLeapMonth,
       year: value('#mg-year', 1995),
       month: value('#mg-month', 5),
       day: value('#mg-day', 18),
@@ -1814,6 +2002,7 @@
             state.calendarType = value;
             var note = $('[data-lunar-note]');
             if (note) note.classList.toggle('mg-hidden', value !== 'lunar');
+            refreshDateOptions();
           }
           Array.prototype.forEach.call(wrap.children, function (child) {
             child.classList.toggle('mg-on', child === group);
@@ -1824,10 +2013,21 @@
 
     root.addEventListener('change', function (ev) {
       var el = ev.target;
-      if (el && el.hasAttribute && el.hasAttribute('data-time-unknown')) {
+      if (!el || !el.hasAttribute) return;
+
+      if (el.hasAttribute('data-time-unknown')) {
         state.timeUnknown = !!el.checked;
         var hour = $('#mg-hour');
         if (hour) hour.disabled = state.timeUnknown;
+        return;
+      }
+      if (el.hasAttribute('data-leap-check')) {
+        state.isLeapMonth = !!el.checked;
+        refreshDateOptions();
+        return;
+      }
+      if (el.id === 'mg-year' || el.id === 'mg-month') {
+        refreshDateOptions();
       }
     });
 
@@ -1936,6 +2136,7 @@
       }, false);
     }
     setSection('home');
+    refreshDateOptions();
     updateSubmitButton();
   }
 

@@ -2,12 +2,14 @@
 
 명(命)을 풀고, 사람과 운을 연결하는 전통 AI 사주 풀이 서비스.
 정밀 만세력 계산(`src/utils/manseEngine.ts`)과 Gemini 기반 심층 해석을 제공합니다.
+음력 생일은 한국천문연구원(KASI) 기준으로 양력 환산한 뒤 계산합니다(윤달 포함).
 
 ## 구성
 
 | 경로 | 설명 |
 | --- | --- |
 | `src/` | React 19 + Vite + Tailwind CSS 4 프런트엔드 (SPA) |
+| `src/utils/lunarCalendar.ts` | 한국천문연구원(KASI) 기준 음력 → 양력 환산 (윤달 포함, 1900~2049) |
 | `server/saju.ts` | Gemini 호출 및 폴백 해석 로직 (프런트/백엔드 공용) |
 | `api/` | Vercel 서버리스 함수 (`/api/health`, `/api/saju/interpret`, `/api/saju/chat`) |
 | `server.ts` | 로컬 개발 전용 Express + Vite 미들웨어 서버 |
