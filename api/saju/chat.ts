@@ -1,5 +1,5 @@
 import type {VercelRequest, VercelResponse} from '@vercel/node';
-import {applyCors} from '../_cors';
+import {applyCors} from '../../server/cors';
 import {chatFallbackReply, chatWithSaju} from '../../server/saju';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

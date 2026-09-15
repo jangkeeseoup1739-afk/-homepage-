@@ -43,7 +43,7 @@ AI Studio가 만든 원본 코드를 그대로 넣으면 서로 충돌합니다.
 
 - 스크립트를 Vercel에서 불러오면 AI 호출(`/api/saju/interpret`, `/api/saju/chat`)이
   자동으로 그 Vercel 주소로 갑니다. 별도 설정이 필요 없습니다.
-- 아임웹은 다른 도메인이므로 API는 교차 출처 호출이 됩니다. `api/_cors.ts`가
+- 아임웹은 다른 도메인이므로 API는 교차 출처 호출이 됩니다. `server/cors.ts`가
   CORS 헤더를 붙입니다. 호출 도메인을 제한하려면 Vercel 환경변수
   `ALLOWED_ORIGINS` 에 `https://내사이트.com` 형태로(쉼표 구분) 지정하세요.
 - **AI 서버 없이도 오류가 나지 않습니다.** 만세력 계산은 원래부터 브라우저에서
