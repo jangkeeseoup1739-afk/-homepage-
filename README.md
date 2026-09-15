@@ -11,7 +11,8 @@
 | `server/saju.ts` | Gemini 호출 및 폴백 해석 로직 (프런트/백엔드 공용) |
 | `api/` | Vercel 서버리스 함수 (`/api/health`, `/api/saju/interpret`, `/api/saju/chat`) |
 | `server.ts` | 로컬 개발 전용 Express + Vite 미들웨어 서버 |
-| `src/embed.tsx`, `vite.embed.config.ts` | 아임웹 등 외부 페이지 삽입용 단일 파일 번들 |
+| `docs/imweb-standalone.html` | 아임웹에 그대로 붙여넣는 단일 코드 (빌드·서버 불필요) |
+| `src/embed.tsx`, `vite.embed.config.ts` | 아임웹 등 외부 페이지 삽입용 단일 파일 번들 (배포 필요) |
 | `shared/fallbackInterpretation.ts` | AI 서버가 없을 때 쓰는 내장 해석 (서버·브라우저 공용) |
 
 `GEMINI_API_KEY`는 서버 측에서만 사용되므로 브라우저 번들에 노출되지 않습니다.
@@ -68,18 +69,35 @@ curl https://<your-project>.vercel.app/api/health
 
 ## 아임웹(Imweb)에 삽입하기
 
-아임웹은 Node 서버를 올릴 수 없으므로, 호스팅형 페이지에 그대로 붙일 수 있는
-단일 파일 번들을 따로 빌드합니다. 붙여넣을 코드와 충돌 대응 내역은
-[docs/IMWEB.md](docs/IMWEB.md) 를 참고하세요.
+아임웹은 Node 서버를 올릴 수 없고 자체 테마 CSS가 이미 깔려 있어, 원본 코드를
+그대로 넣으면 빌드도 안 되고 스타일도 충돌합니다. 두 가지 방법이 있습니다.
+
+### 방법 A — 붙여넣기 전용 (권장, 아무 준비도 필요 없음)
+
+[`docs/imweb-standalone.html`](docs/imweb-standalone.html) 을 통째로 복사해서
+아임웹 **위젯 추가 → HTML(코드 입력)** 에 붙여넣으면 끝입니다.
+
+- 빌드도, 서버 배포도, 외부 파일도 필요 없습니다.
+- Shadow DOM 안에서 그려지므로 아임웹 테마 CSS와 서로 침범하지 않습니다.
+- 만세력은 브라우저에서 100% 계산되고, AI 서버가 없으면 내장 해설로 자동
+  대체되어 결과 화면이 비지 않습니다.
+- 나중에 Vercel에 배포했다면 코드 위에 한 줄만 추가해 AI 풀이로 올릴 수 있습니다.
+
+```html
+<script>window.MYEONGGYEOL_API_BASE = 'https://내프로젝트.vercel.app';</script>
+```
+
+### 방법 B — 호스팅형 번들
+
+원본 React 화면을 그대로 쓰고 싶다면 `npm run build:embed` 로 만든 단일 파일을
+배포한 뒤 `<script>` 한 줄로 불러옵니다.
 
 ```html
 <div id="myeonggyeol-app"></div>
 <script src="https://<your-project>.vercel.app/myeonggyeol.js"></script>
 ```
 
-이 번들은 CSS가 `#myeonggyeol-app` 하위로 한정되어 아임웹 페이지 스타일을
-건드리지 않으며, AI 서버에 닿지 못해도 내장 해석으로 자동 대체되어 오류 없이
-동작합니다.
+붙여넣을 코드와 충돌 대응 내역은 [docs/IMWEB.md](docs/IMWEB.md) 를 참고하세요.
 
 ## 참고
 
