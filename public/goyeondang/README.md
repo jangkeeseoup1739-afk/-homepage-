@@ -22,9 +22,24 @@ python3 -m http.server 8000 --directory public
 
 ## 1. 매장 정보 채우기
 
-`assets/site.config.js` 상단의 `address`, `phone`, `hours`를 실제 값으로 바꿉니다.
+주소(서울 강동구 천호옛12길 21 1층 102호), 네이버 지도 링크, 인스타그램 두 계정
+(민화 `@studio_goyeondang` · 커피 `@goyeondang_`)은 이미 들어가 있습니다.
+
+아직 비어 있어 채워야 하는 값은 `assets/site.config.js`의 다음 항목입니다.
+
+| 항목 | 설명 |
+| --- | --- |
+| `phone` | 매장 전화번호 — 넣으면 전화 버튼이 나타납니다 |
+| `hours` | 실제 영업시간과 휴무일 (지금 값은 임시) |
+| `classes[].price` | 수업 가격 — 숫자를 넣으면 문의 전환이 올라갑니다 |
+| `menu[].items[].price` | 음료 가격 |
+| `kakaoJsKey` | 카카오톡 공유를 쓰려면 필요 (아래 3번) |
+
 **빈 문자열(`''`)로 두면 해당 줄과 버튼이 자동으로 숨겨지므로**, 값이 없는 항목은
 그대로 비워 두면 됩니다.
+
+인스타그램은 섹션마다 계정이 다릅니다. 민화 클래스·작품 섹션 아래에는
+`@studio_goyeondang`, 커피 섹션과 하단 바에는 `@goyeondang_`가 노출됩니다.
 
 ## 2. 갤러리 사진 넣기
 
