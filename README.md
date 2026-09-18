@@ -13,6 +13,7 @@
 | `server.ts` | 로컬 개발 전용 Express + Vite 미들웨어 서버 |
 | `src/embed.tsx`, `vite.embed.config.ts` | 아임웹 등 외부 페이지 삽입용 단일 파일 번들 |
 | `shared/fallbackInterpretation.ts` | AI 서버가 없을 때 쓰는 내장 해석 (서버·브라우저 공용) |
+| `public/goyeondang/` | 고연당(민화 공방 · 커피) 소개 페이지 — `/goyeondang` 로 배포되는 독립 정적 페이지 |
 
 `GEMINI_API_KEY`는 서버 측에서만 사용되므로 브라우저 번들에 노출되지 않습니다.
 키가 없으면 각 API는 내장된 결정적(deterministic) 해석으로 자동 폴백합니다.
@@ -80,6 +81,12 @@ curl https://<your-project>.vercel.app/api/health
 이 번들은 CSS가 `#myeonggyeol-app` 하위로 한정되어 아임웹 페이지 스타일을
 건드리지 않으며, AI 서버에 닿지 못해도 내장 해석으로 자동 대체되어 오류 없이
 동작합니다.
+
+## 고연당 페이지 (`/goyeondang`)
+
+같은 배포에 얹혀 있는 별도의 정적 홈페이지입니다. 빌드 과정 없이 `public/` 의
+파일이 그대로 복사되며, 내용 수정·사진 추가·카카오톡 공유 설정 방법은
+[public/goyeondang/README.md](public/goyeondang/README.md) 에 정리해 두었습니다.
 
 ## 참고
 

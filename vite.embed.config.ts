@@ -160,6 +160,9 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist-embed',
+    // The embed bundle inlines everything it needs; public/ belongs to the
+    // site build only (it also holds the standalone /goyeondang page).
+    copyPublicDir: false,
     emptyOutDir: true,
     cssCodeSplit: false,
     // Inline images as data URIs: a foreign host must not need to resolve

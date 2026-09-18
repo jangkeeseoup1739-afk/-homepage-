@@ -4,7 +4,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    {"source": "/((?!api/).*)", "destination": "/index.html"}
+    {"source": "/goyeondang", "destination": "/goyeondang/index.html"},
+    {"source": "/((?!api/|goyeondang).*)", "destination": "/index.html"}
   ],
   "headers": [
     {
