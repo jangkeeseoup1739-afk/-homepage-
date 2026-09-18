@@ -25,7 +25,9 @@
   --shadow-lg: 0 24px 60px -32px rgba(60, 40, 22, .55);
 
   --serif: 'Gowun Batang', 'Noto Serif KR', serif;
-  --sans: Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
+  /* Pretendard는 jsdelivr에서 받아오므로, 그 CDN이 막힌 환경에서는
+     구글 폰트의 Noto Sans KR로 자연스럽게 넘어가도록 둔다. */
+  --sans: Pretendard, 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
