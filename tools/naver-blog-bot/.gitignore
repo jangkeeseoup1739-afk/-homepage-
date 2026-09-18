@@ -1,0 +1,10 @@
+# 로그인 상태가 들어 있는 브라우저 프로필. 절대 커밋하지 말 것.
+.naver-profile/
+
+# 발행 결과물과 기록
+done/*
+!done/.gitkeep
+발행기록.csv
+오류화면-*.png
+
+node_modules/

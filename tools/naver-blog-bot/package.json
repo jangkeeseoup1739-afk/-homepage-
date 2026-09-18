@@ -1,0 +1,14 @@
+{
+  "name": "naver-blog-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "네이버 블로그 글 자동 발행",
+  "scripts": {
+    "login": "node login.js",
+    "post": "node post.js"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
