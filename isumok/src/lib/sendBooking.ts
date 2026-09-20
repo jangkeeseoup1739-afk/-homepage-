@@ -41,7 +41,18 @@ export async function sendBooking(booking: BookingRequest): Promise<BookingDeliv
       redirect: 'follow',
       signal: first.signal,
     });
-    if (res.ok) return 'sent';
+    if (res.ok) {
+      // 앱스 스크립트는 접수를 거절할 때도 HTTP 200 에 { ok: false } 를 담아 보냅니다.
+      // HTTP 상태만 보면 거절당한 신청을 접수된 것으로 오인하게 됩니다.
+      try {
+        const data = await res.json();
+        // 거절은 재전송해도 결과가 같으므로 바로 실패로 처리합니다.
+        if (data && data.ok === false) return 'failed';
+      } catch {
+        // 본문을 읽지 못한 경우(CORS 등)에는 200 을 받은 것으로 충분합니다.
+      }
+      return 'sent';
+    }
   } catch {
     // 아래 no-cors 재시도로 넘어갑니다.
   } finally {

@@ -11,9 +11,18 @@
 var SHEET_NAME = '예약신청';
 
 /**
- * 알림을 받을 이메일 주소.
- * 비워 두면 이 스크립트를 만든 구글 계정의 주소로 자동 발송됩니다.
- * 여러 명이 받으려면 쉼표로 구분하세요. 예: 'a@gmail.com, b@gmail.com'
+ * 알림을 받을 이메일 주소. 여기에 원장님 주소를 넣으세요.
+ *
+ * 구글 계정이 아니어도 됩니다. 네이버·다음 메일 주소도 그대로 쓸 수 있습니다.
+ *   예: var NOTIFY_EMAIL = 'name@naver.com';
+ *
+ * 여러 명이 받으려면 쉼표로 구분하세요.
+ *   예: var NOTIFY_EMAIL = 'name@naver.com, shop@gmail.com';
+ *
+ * 비워 두면 이 스크립트를 만든 구글 계정의 주소로 발송됩니다.
+ *
+ * 네이버 메일로 받는 경우, 첫 메일은 스팸함으로 갈 수 있습니다.
+ * 테스트 후 메일이 안 보이면 스팸함을 확인하고 '스팸 아님' 처리해 주세요.
  */
 var NOTIFY_EMAIL = '';
 
@@ -67,9 +76,18 @@ function doPost(e) {
     ];
 
     getSheet_().appendRow(row);
-    notify_(booking, concernText);
 
-    return jsonOut_({ ok: true });
+    // 메일 발송 실패(Gmail 일일 한도 초과, 수신 거부 등)가 접수 자체를 실패로
+    // 만들면 안 됩니다. 시트에는 이미 들어갔으므로 고객에게는 접수 완료가 맞습니다.
+    var mailError = '';
+    try {
+      notify_(booking, concernText);
+    } catch (mailErr) {
+      mailError = String(mailErr);
+      console.error('알림 메일 발송 실패: ' + mailError);
+    }
+
+    return jsonOut_(mailError ? { ok: true, mailError: mailError } : { ok: true });
   } catch (err) {
     return jsonOut_({ ok: false, error: String(err) });
   }
@@ -190,7 +208,14 @@ function notify_(booking, concernText) {
     })
     .join('\n');
 
-  MailApp.sendEmail({ to: to, subject: subject, body: plain, htmlBody: html });
+  // 발신자 이름을 지정하면 받는 쪽에서 정체가 분명해져 스팸으로 분류될 확률이 줄어듭니다.
+  MailApp.sendEmail({
+    to: to,
+    subject: subject,
+    body: plain,
+    htmlBody: html,
+    name: '이수목헤어스토리 홈페이지',
+  });
 }
 
 function escapeHtml_(value) {
