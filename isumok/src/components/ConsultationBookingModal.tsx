@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Phone, Clock, Sparkles, CheckCircle, ExternalLink, Heart, AlertCircle } from 'lucide-react';
+import { X, Calendar, Phone, Clock, Sparkles, CheckCircle, ExternalLink, Heart, AlertCircle, Loader2 } from 'lucide-react';
 import { SALON_INFO } from '../data/salonData';
 import { BookingRequest } from '../types';
+import { sendBooking } from '../lib/sendBooking';
 
 interface ConsultationBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   preselectedService?: string;
-  onAddBooking: (booking: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>) => void;
+  onAddBooking: (booking: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>) => BookingRequest;
 }
+
+/** 제출 버튼을 누른 뒤의 화면 상태 */
+type SubmitState = 'idle' | 'sending' | 'success' | 'failed';
 
 export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> = ({
   isOpen,
@@ -26,7 +30,8 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
   const [service, setService] = useState('열펌 (디지털,셋팅)');
   const [concerns, setConcerns] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+  const [submitState, setSubmitState] = useState<SubmitState>('idle');
 
   useEffect(() => {
     if (preselectedService) {
@@ -59,29 +64,45 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim() || !date) return;
+    if (!name.trim() || !phone.trim() || !date || !privacyAgreed) return;
+    if (submitState === 'sending') return;
 
-    onAddBooking({
+    setSubmitState('sending');
+
+    // 전송에 실패하더라도 고객 브라우저에는 남겨 둡니다.
+    const booking = onAddBooking({
       customerName: name,
       phone,
       preferredDate: date,
       preferredTime: time,
       serviceCategory: service,
       hairConcerns: concerns,
-      notes
+      notes,
+      privacyAgreed
     });
 
-    setIsSuccess(true);
-    setTimeout(() => {
-      setIsSuccess(false);
-      setName('');
-      setPhone('');
-      setNotes('');
-      setConcerns([]);
-      onClose();
-    }, 2200);
+    const status = await sendBooking(booking);
+
+    // 'sent-unconfirmed' 는 브라우저가 응답을 못 읽었을 뿐 접수는 전달된 상태입니다.
+    if (status === 'sent' || status === 'sent-unconfirmed') {
+      setSubmitState('success');
+      setTimeout(() => {
+        setSubmitState('idle');
+        setName('');
+        setPhone('');
+        setNotes('');
+        setConcerns([]);
+        setPrivacyAgreed(false);
+        onClose();
+      }, 2600);
+      return;
+    }
+
+    // 'failed'(네트워크 오류)와 'disabled'(전송 주소 미설정)는 모두
+    // 원장님께 전달되지 않은 상태이므로 전화 예약을 안내합니다.
+    setSubmitState('failed');
   };
 
   return (
@@ -157,7 +178,7 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
           {/* TAB 1: Direct Form */}
           {activeTab === 'direct' && (
             <div>
-              {isSuccess ? (
+              {submitState === 'success' ? (
                 <div className="py-12 text-center space-y-3">
                   <div className="w-14 h-14 rounded-full bg-[#d4af37]/20 border border-[#d4af37] flex items-center justify-center text-[#d4af37] mx-auto animate-bounce">
                     <CheckCircle className="w-8 h-8" />
@@ -169,6 +190,44 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
                     이수목 원장이 고객님의 요청사항을 확인한 후, <br />
                     빠른 시간 내에 남겨주신 연락처로 일정 확정 연락을 드리겠습니다.
                   </p>
+                </div>
+              ) : submitState === 'failed' ? (
+                <div className="py-10 text-center space-y-4">
+                  <div className="w-14 h-14 rounded-full bg-red-500/15 border border-red-400/70 flex items-center justify-center text-red-300 mx-auto">
+                    <AlertCircle className="w-8 h-8" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white">
+                    신청 전송에 실패했습니다
+                  </h4>
+                  <p className="text-sm text-[#cbd2e1] max-w-md mx-auto leading-relaxed">
+                    일시적인 통신 오류로 원장님께 신청이 전달되지 못했습니다.<br />
+                    번거로우시겠지만 아래 번호로 전화 주시면 바로 예약 도와드리겠습니다.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto pt-1">
+                    <a
+                      href={`tel:${SALON_INFO.phonePrimary}`}
+                      className="py-3 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c660] to-[#b89225] text-[#121316] font-bold text-sm flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span>{SALON_INFO.phonePrimary}</span>
+                    </a>
+                    <a
+                      href={`tel:${SALON_INFO.phoneSecondary}`}
+                      className="py-3 rounded-xl bg-[#1d202a] border border-[#3c4152] hover:border-[#d4af37] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all"
+                    >
+                      <Phone className="w-4 h-4 text-[#d4af37]" />
+                      <span>{SALON_INFO.phoneSecondary}</span>
+                    </a>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setSubmitState('idle')}
+                    className="text-xs text-[#cbd2e1] underline underline-offset-4 hover:text-white transition-colors"
+                  >
+                    작성한 내용으로 다시 시도하기
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -302,13 +361,43 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
                     />
                   </div>
 
+                  <div className="p-3.5 rounded-lg bg-[#20222b] border border-[#343849] space-y-2">
+                    <label className="flex items-start gap-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={privacyAgreed}
+                        onChange={(e) => setPrivacyAgreed(e.target.checked)}
+                        className="w-4 h-4 mt-0.5 accent-[#d4af37] rounded shrink-0"
+                      />
+                      <span className="text-xs sm:text-sm text-white font-bold">
+                        개인정보 수집·이용에 동의합니다 <span className="text-red-400">*</span>
+                      </span>
+                    </label>
+                    <p className="text-[11px] sm:text-xs text-[#a6adbd] leading-relaxed pl-[26px]">
+                      수집 항목: 성함, 연락처, 희망 일시, 시술 및 모발 고민 내용 · 이용 목적: 예약 확정
+                      안내와 맞춤 상담 · 보유 기간: 예약 완료 후 1년. 동의를 거부하실 수 있으나 이 경우
+                      온라인 예약 신청이 어려우며, 전화로 예약해 주시면 됩니다.
+                    </p>
+                  </div>
+
                   <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c660] to-[#b89225] text-[#121316] font-bold text-sm sm:text-base shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                      disabled={submitState === 'sending' || !privacyAgreed}
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c660] to-[#b89225] text-[#121316] font-bold text-sm sm:text-base shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:brightness-100 disabled:active:scale-100"
                     >
-                      <Calendar className="w-4 h-4 text-[#121316]" />
-                      <span>1:1 예약 및 맞춤 상담 신청하기</span>
+                      {submitState === 'sending' ? (
+                        <>
+                          <Loader2 className="w-4 h-4 text-[#121316] animate-spin" />
+                          <span>신청 전송 중…</span>
+                        </>
+                      ) : (
+                        <>
+                          <Calendar className="w-4 h-4 text-[#121316]" />
+                          <span>1:1 예약 및 맞춤 상담 신청하기</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

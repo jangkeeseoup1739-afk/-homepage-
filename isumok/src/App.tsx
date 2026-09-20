@@ -108,7 +108,8 @@ export default function App() {
     setPortfolioItems(prev => prev.filter(item => item.id !== id));
   };
 
-  const handleAddBooking = (newBookingData: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>) => {
+  // 만들어진 예약 건을 그대로 돌려줍니다. 모달이 이 값을 구글 시트로 전송합니다.
+  const handleAddBooking = (newBookingData: Omit<BookingRequest, 'id' | 'createdAt' | 'status'>): BookingRequest => {
     const newBooking: BookingRequest = {
       ...newBookingData,
       id: `book-${Date.now()}`,
@@ -123,6 +124,7 @@ export default function App() {
       status: '접수완료'
     };
     setBookings(prev => [newBooking, ...prev]);
+    return newBooking;
   };
 
   const handleUpdateBookingStatus = (id: string, status: BookingRequest['status']) => {

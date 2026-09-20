@@ -64,6 +64,7 @@ export interface BookingRequest {
   serviceCategory: string;
   hairConcerns: string[];
   notes?: string;
+  privacyAgreed: boolean;
   createdAt: string;
   status: '접수완료' | '예약확정' | '시술완료' | '취소됨';
 }

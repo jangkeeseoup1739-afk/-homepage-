@@ -296,6 +296,7 @@ export const INITIAL_BOOKINGS: BookingRequest[] = [
     serviceCategory: '열펌 (매직셋팅)',
     hairConcerns: ['모발 손상', '곱슬기 교정'],
     notes: '끝부분이 갈라져 있어서 천연 케어 추가하고 싶습니다.',
+    privacyAgreed: true,
     createdAt: '2026-09-15 14:20',
     status: '예약확정'
   },
@@ -308,6 +309,7 @@ export const INITIAL_BOOKINGS: BookingRequest[] = [
     serviceCategory: '링거펌 (모류교정 & 뿌리볼륨)',
     hairConcerns: ['가르마 갈라짐', '뿌리 볼륨 꺼짐'],
     notes: '상담 후 커트도 함께 진행하고 싶어요.',
+    privacyAgreed: true,
     createdAt: '2026-09-16 09:15',
     status: '접수완료'
   }
