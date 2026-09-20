@@ -1,0 +1,42 @@
+# 이수목헤어스토리
+
+서울 송파구 새말로17길 천연 모발·두피 케어 전문 1인 프리미엄 헤어살롱 **이수목헤어스토리** 홈페이지.
+
+열펌 · 링거펌 · 볼륨매직 시술 안내, 시술 전후 갤러리, 포트폴리오, 후기, 네이버 예약·상담 연결을 제공합니다.
+
+## 기술 스택
+
+- React 19 + TypeScript
+- Vite 6 (정적 SPA 빌드)
+- Tailwind CSS 4
+- Motion, lucide-react
+
+백엔드·데이터베이스는 사용하지 않습니다. 관리자 모달에서 편집한 갤러리·후기·예약 내역은
+브라우저 `localStorage`에 저장되므로 기기별로 유지됩니다.
+
+## 로컬 실행
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
+
+## 빌드
+
+```bash
+npm run build    # dist/ 생성
+npm run preview  # 빌드 결과 확인
+npm run lint     # tsc --noEmit 타입 검사
+```
+
+## 배포 (Vercel)
+
+프레임워크 프리셋 `Vite`, 빌드 명령 `npm run build`, 출력 디렉터리 `dist`로 자동 인식됩니다.
+`vercel.json`의 rewrite가 모든 경로를 `index.html`로 보내 SPA 라우팅을 처리합니다.
+필요한 환경 변수는 없습니다.
+
+## 이미지 경로 규칙
+
+런타임에 문자열 경로로 참조하는 이미지는 반드시 `public/` 아래에 두고 `/파일명.jpg` 로 참조합니다.
+`/src/assets/...` 경로는 개발 서버에서만 동작하고 프로덕션 빌드에서는 404가 되므로 사용하지 않습니다.
+컴포넌트에서 `import` 하는 이미지는 `src/assets/` 에 두어도 됩니다 (Vite가 번들에 포함).

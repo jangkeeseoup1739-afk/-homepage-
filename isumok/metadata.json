@@ -1,0 +1,7 @@
+{
+  "name": "이수목헤어스토리",
+  "description": "서울 송파구 새말로17길 천연 모발·두피 케어 전문 1인 프리미엄 헤어살롱 이수목헤어스토리. 열펌, 링거펌, 볼륨매직 및 네이버 예약·상담, 시술 전후 갤러리.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
