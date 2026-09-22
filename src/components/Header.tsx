@@ -1,116 +1,326 @@
-import React, { useState } from 'react';
-import { Menu, X, Sparkles, Moon, Sun } from 'lucide-react';
+import { useState } from 'react';
+import { CURRENT_YEAR, YEAR_STR } from '../utils/date';
+import { 
+  Building2, PhoneCall, Bell, Calculator, Settings, ChevronDown, 
+  Menu, X, Sparkles, ShieldCheck 
+} from 'lucide-react';
+import { InfoCategory } from '../types';
+import Logo from './Logo';
 
 interface HeaderProps {
-  onNavClick: (sectionId: string) => void;
-  activeSection: string;
+  currentTab: 'home' | 'info' | 'presale' | 'news' | 'consultation';
+  onSelectTab: (tab: 'home' | 'info' | 'presale' | 'news' | 'consultation') => void;
+  selectedInfoCategory: InfoCategory;
+  onSelectInfoCategory: (cat: InfoCategory) => void;
+  unreadNotificationCount: number;
+  onOpenNotifications: () => void;
+  onOpenCalculator: () => void;
+  onOpenConsultation: () => void;
+  onOpenAdmin: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onNavClick, activeSection }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function Header({
+  currentTab,
+  onSelectTab,
+  selectedInfoCategory,
+  onSelectInfoCategory,
+  unreadNotificationCount,
+  onOpenNotifications,
+  onOpenCalculator,
+  onOpenConsultation,
+  onOpenAdmin
+}: HeaderProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isInfoDropdownOpen, setIsInfoDropdownOpen] = useState(false);
 
-  const navItems = [
-    { id: 'home', label: '홈' },
-    { id: 'saju', label: '사주팔자' },
-    { id: 'wealth', label: '재물운' },
-    { id: 'career', label: '사업운' },
-    { id: 'match', label: '궁합' },
-    { id: 'luck', label: '대운·세운' },
-    { id: 'ai-chat', label: 'AI상담' },
+  const infoSubmenus: InfoCategory[] = [
+    '부동산 상식',
+    '청약',
+    '대출·금융',
+    '세금',
+    '오피스텔',
+    '지식산업센터'
   ];
 
   return (
-    <header data-myeonggyeol-header className="sticky top-0 z-50 bg-[#0D0E14]/90 backdrop-blur-md border-b border-[#262432]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-        {/* Logo */}
-        <div 
-          id="brand-logo"
-          onClick={() => onNavClick('home')}
-          className="flex items-center gap-3 cursor-pointer group"
-        >
-          {/* Traditional Symbol with Sun/Moon and Mountain motif */}
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#1E202B] to-[#12131A] border border-[#D4AF7C]/50 flex items-center justify-center relative shadow-md group-hover:border-[#D4AF7C] transition-all">
-            <div className="absolute inset-0 rounded-full bg-[#D4AF7C]/15 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <Sparkles className="w-6 h-6 text-[#D4AF7C]" />
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+      {/* Top Utility Bar */}
+      <div className="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 px-3 sm:px-8 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 truncate">
+            <span className="flex items-center gap-1 text-amber-400 font-bold shrink-0">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{CURRENT_YEAR} 청약·대출·세무 종합</span>
+            </span>
+            <span className="hidden md:inline text-slate-500">|</span>
+            <span className="hidden md:inline text-slate-400 truncate">
+              전국 신규 분양정보 정밀 검색 & 1:1 맞춤 컨설팅
+            </span>
           </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="font-serif-kr text-2xl sm:text-3xl font-extrabold tracking-tight text-[#FFFFFF] group-hover:text-[#D4AF7C] transition-colors">
-                명결
-              </span>
-              <span className="text-sm text-[#D4AF7C] font-serif-kr font-semibold tracking-widest">
-                命結
-              </span>
-            </div>
-            <p className="text-xs text-[#E2E8F0] font-normal tracking-wide hidden sm:block">
-              당신의 운명을 이어주는 특별한 순간
-            </p>
+
+          <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
+            <a
+              href="tel:010-8873-7258"
+              className="flex items-center gap-1 font-extrabold text-amber-300 hover:text-white transition-colors text-xs"
+            >
+              <PhoneCall className="w-3 h-3 animate-pulse" />
+              <span>010-8873-7258</span>
+            </a>
+            <span className="text-slate-700 hidden sm:inline">|</span>
+            <button
+              onClick={onOpenAdmin}
+              className="text-slate-300 hover:text-white flex items-center gap-1 font-medium transition-colors text-[11px] sm:text-xs"
+            >
+              <Settings className="w-3 h-3" />
+              <span>관리자</span>
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-1.5 lg:gap-2.5">
-          {navItems.map((item) => (
+      {/* Main Navigation Bar */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-8 h-15 sm:h-18 flex items-center justify-between">
+        {/* Brand Logo */}
+        <div
+          onClick={() => onSelectTab('home')}
+          className="flex items-center cursor-pointer group py-1"
+        >
+          <Logo variant="compact" />
+        </div>
+
+        {/* Desktop Nav Items */}
+        <nav className="hidden lg:flex items-center gap-1 text-sm font-bold text-slate-700">
+          <button
+            onClick={() => onSelectTab('home')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              currentTab === 'home'
+                ? 'bg-blue-50 text-blue-600'
+                : 'hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            홈
+          </button>
+
+          {/* 부동산 정보 with Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsInfoDropdownOpen(true)}
+            onMouseLeave={() => setIsInfoDropdownOpen(false)}
+          >
             <button
-              key={item.id}
-              id={`nav-${item.id}`}
-              onClick={() => onNavClick(item.id)}
-              className={`px-4 py-2 rounded-lg text-sm sm:text-base font-semibold transition-all ${
-                activeSection === item.id
-                  ? 'text-[#FFFFFF] bg-[#222436] shadow-sm border border-[#D4AF7C]/50'
-                  : 'text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#1A1C26]'
+              onClick={() => onSelectTab('info')}
+              className={`px-4 py-2 rounded-xl flex items-center gap-1 transition-all ${
+                currentTab === 'info'
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
-              {item.label}
+              <span>부동산 정보</span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-60" />
             </button>
-          ))}
-        </nav>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#181A24] border border-[#D4AF7C]/40 text-xs sm:text-sm font-medium text-[#F5D298]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            정통 만세력 & AI 도사 상시 대기
+            {isInfoDropdownOpen && (
+              <div className="absolute top-full left-0 w-48 bg-white rounded-2xl shadow-xl border border-slate-200/90 py-2 animate-in fade-in slide-in-from-top-1 duration-150 z-50">
+                <button
+                  onClick={() => {
+                    onSelectInfoCategory('전체');
+                    onSelectTab('info');
+                    setIsInfoDropdownOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-2 text-xs font-semibold hover:bg-blue-50 hover:text-blue-600 text-slate-800"
+                >
+                  전체 가이드 모아보기
+                </button>
+                <div className="h-px bg-slate-100 my-1" />
+                {infoSubmenus.map((sub) => (
+                  <button
+                    key={sub}
+                    onClick={() => {
+                      onSelectInfoCategory(sub);
+                      onSelectTab('info');
+                      setIsInfoDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-xs font-semibold hover:bg-blue-50 hover:text-blue-600 transition-colors ${
+                      selectedInfoCategory === sub && currentTab === 'info'
+                        ? 'text-blue-600 font-bold bg-blue-50/50'
+                        : 'text-slate-600'
+                    }`}
+                  >
+                    {sub}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <button
-            id="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-[#E2E8F0] hover:text-[#FFFFFF] hover:bg-[#1A1C26]"
-            aria-label="Toggle menu"
+            onClick={() => onSelectTab('presale')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              currentTab === 'presale'
+                ? 'bg-blue-50 text-blue-600'
+                : 'hover:bg-slate-100 hover:text-slate-900'
+            }`}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            신규 분양정보
+          </button>
+
+          <button
+            onClick={() => onSelectTab('news')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              currentTab === 'news'
+                ? 'bg-blue-50 text-blue-600'
+                : 'hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            부동산 뉴스
+          </button>
+
+          <button
+            onClick={() => onSelectTab('consultation')}
+            className={`px-4 py-2 rounded-xl transition-all ${
+              currentTab === 'consultation'
+                ? 'bg-blue-50 text-blue-600'
+                : 'hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            상담문의
+          </button>
+        </nav>
+
+        {/* Right CTA Utilities */}
+        <div className="flex items-center gap-1.5 sm:gap-3">
+          {/* Real-time Notifications Bell */}
+          <button
+            onClick={onOpenNotifications}
+            className="relative p-2 sm:p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/40 transition-all min-h-[38px] min-w-[38px] flex items-center justify-center"
+            title="실시간 분양 및 정책 알림"
+          >
+            <Bell className="w-4 h-4" />
+            {unreadNotificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                {unreadNotificationCount}
+              </span>
+            )}
+          </button>
+
+          {/* Calculator Button */}
+          <button
+            onClick={onOpenCalculator}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition-colors min-h-[38px]"
+          >
+            <Calculator className="w-3.5 h-3.5 text-blue-600" />
+            <span>계산기</span>
+          </button>
+
+          {/* Fast Consultation Button */}
+          <button
+            onClick={onOpenConsultation}
+            className="px-3 sm:px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 hover:shadow-lg transition-all flex items-center gap-1 sm:gap-1.5 min-h-[38px]"
+          >
+            <PhoneCall className="w-3.5 h-3.5" />
+            <span>상담신청</span>
+          </button>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 min-h-[38px] min-w-[38px] flex items-center justify-center"
+            aria-label="메뉴 열기"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#12131A] border-b border-[#262432] px-4 pt-2 pb-5 space-y-1">
-          {navItems.map((item) => (
+      {/* Mobile Drawer Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3 animate-in slide-in-from-top duration-200 shadow-xl">
+          <div className="grid grid-cols-2 gap-2 pb-3 border-b border-slate-100">
             <button
-              key={item.id}
-              id={`mobile-nav-${item.id}`}
               onClick={() => {
-                onNavClick(item.id);
-                setMobileMenuOpen(false);
+                onSelectTab('home');
+                setIsMobileMenuOpen(false);
               }}
-              className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium flex items-center justify-between ${
-                activeSection === item.id
-                  ? 'text-[#D4AF7C] bg-[#1E202B] border-l-2 border-[#D4AF7C]'
-                  : 'text-[#CDC7BD] hover:bg-[#1A1C26]'
+              className={`p-3 rounded-xl text-sm font-bold text-left min-h-[44px] flex items-center ${
+                currentTab === 'home' ? 'bg-blue-50 text-blue-600 font-extrabold' : 'bg-slate-50 text-slate-800'
               }`}
             >
-              <span>{item.label}</span>
-              {item.id === 'ai-chat' && (
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[#D4AF7C]/20 text-[#D4AF7C]">
-                  AI 풀이
-                </span>
-              )}
+              홈
             </button>
-          ))}
+            <button
+              onClick={() => {
+                onSelectTab('presale');
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-3 rounded-xl text-sm font-bold text-left min-h-[44px] flex items-center ${
+                currentTab === 'presale' ? 'bg-blue-50 text-blue-600 font-extrabold' : 'bg-slate-50 text-slate-800'
+              }`}
+            >
+              신규 분양정보
+            </button>
+            <button
+              onClick={() => {
+                onSelectTab('info');
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-3 rounded-xl text-sm font-bold text-left min-h-[44px] flex items-center ${
+                currentTab === 'info' ? 'bg-blue-50 text-blue-600 font-extrabold' : 'bg-slate-50 text-slate-800'
+              }`}
+            >
+              부동산 정보 가이드
+            </button>
+            <button
+              onClick={() => {
+                onSelectTab('news');
+                setIsMobileMenuOpen(false);
+              }}
+              className={`p-3 rounded-xl text-sm font-bold text-left min-h-[44px] flex items-center ${
+                currentTab === 'news' ? 'bg-blue-50 text-blue-600 font-extrabold' : 'bg-slate-50 text-slate-800'
+              }`}
+            >
+              부동산 뉴스
+            </button>
+          </div>
+
+          <div className="pt-1">
+            <div className="text-xs font-bold text-slate-500 mb-2">정보 카테고리 바로가기</div>
+            <div className="flex flex-wrap gap-1.5">
+              {infoSubmenus.map((sub) => (
+                <button
+                  key={sub}
+                  onClick={() => {
+                    onSelectInfoCategory(sub);
+                    onSelectTab('info');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="px-3 py-1.5 rounded-xl text-xs sm:text-sm bg-slate-100 hover:bg-blue-50 hover:text-blue-600 text-slate-800 font-semibold min-h-[34px] flex items-center"
+                >
+                  {sub}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs sm:text-sm">
+            <a
+              href="tel:010-8873-7258"
+              className="flex items-center gap-1.5 font-bold text-blue-600 min-h-[40px]"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>010-8873-7258 전화상담</span>
+            </a>
+            <button
+              onClick={() => {
+                onOpenCalculator();
+                setIsMobileMenuOpen(false);
+              }}
+              className="text-slate-700 font-bold px-3 py-1.5 bg-slate-100 rounded-lg"
+            >
+              계산기 열기
+            </button>
+          </div>
         </div>
       )}
     </header>
   );
-};
+}

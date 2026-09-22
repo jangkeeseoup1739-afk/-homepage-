@@ -1,86 +1,107 @@
-export type Gender = 'male' | 'female';
-export type CalendarType = 'solar' | 'lunar';
+export type PropertyType = '전체' | '아파트' | '오피스텔' | '지식산업센터' | '상가/업무';
+export type PresaleStatus = '전체' | '분양예정' | '분양중' | '마감임박' | '분양완료';
 
-export type ElementType = 'wood' | 'fire' | 'earth' | 'metal' | 'water';
-
-export interface FiveElementsCount {
-  wood: number;
-  fire: number;
-  earth: number;
-  metal: number;
-  water: number;
+export interface PropertyListing {
+  id: string;
+  title: string;
+  subtitle: string;
+  propertyType: '아파트' | '오피스텔' | '지식산업센터' | '상가/업무';
+  region: string; // e.g. '서울 강남', '경기 화성/동탄', '인천 송도'
+  regionCategory: string; // e.g. '서울', '경기', '인천', '지방'
+  pyeong: number; // e.g. 34
+  pyeongGroup: '20평 이하' | '20~30평' | '30~40평' | '40평 이상';
+  price: number; // in 억 원, e.g. 5.8
+  priceDisplay: string; // e.g. "5억 8,000만원"
+  priceGroup: '3억 이하' | '3억~6억' | '6억~10억' | '10억 이상';
+  status: '분양예정' | '분양중' | '마감임박' | '분양완료';
+  totalHouseholds: string; // e.g. "1,420세대"
+  moveInDate: string; // e.g. "2027.06"
+  constructorCompany: string; // e.g. "현대건설"
+  address: string;
+  imageUrl: string;
+  highlights: string[];
+  description: string;
+  floorPlanTypes: string[];
+  contactPhone: string;
+  isHot?: boolean;
+  createdAt: string;
 }
 
-export interface Pillar {
-  heavenlyStem: string;     // 천간 (예: 甲, 乙, ...)
-  heavenlyStemKr: string;   // 천간 한글 (예: 갑, 을, ...)
-  heavenlyStemElement: ElementType; // 오행
-  heavenlyStemTenGod: string; // 십신 (예: 비견, 정재, ...)
-  
-  earthlyBranch: string;    // 지지 (예: 子, 丑, ...)
-  earthlyBranchKr: string;  // 지지 한글 (예: 자, 축, ...)
-  earthlyBranchElement: ElementType; // 오행
-  earthlyBranchTenGod: string; // 십신
-  
-  hiddenStems: string[];    // 지장간 (한글)
-  twelveState: string;      // 십이운성 (장생, 목욕, 제왕 등)
-}
+export type InfoCategory = '전체' | '부동산 상식' | '청약' | '대출·금융' | '세금' | '오피스텔' | '지식산업센터';
 
-export interface SajuResult {
-  name: string;
-  gender: Gender;
-  solarDate: string;
-  birthTimeStr: string;
-  isTimeUnknown: boolean;
-  region: string;
-  
-  yearPillar: Pillar;
-  monthPillar: Pillar;
-  dayPillar: Pillar;
-  hourPillar?: Pillar;
-  
-  dayMaster: string;        // 일간 (나를 나타내는 기운, 예: 갑목, 병화)
-  dayMasterDesc: string;    // 일간의 특성
-  
-  elements: FiveElementsCount;
-  elementPercentages: Record<ElementType, number>;
-  dominantElement: ElementType;
-  lackingElement: ElementType[];
-  
-  majorLuckNumber: number;  // 대운수 (예: 3대운, 7대운)
-  majorLuckPillars: Array<{
-    age: number;
-    stem: string;
-    stemKr: string;
-    branch: string;
-    branchKr: string;
-  }>;
-}
-
-export interface SajuInput {
-  name: string;
-  gender: Gender;
-  calendarType: CalendarType;
-  year: number;
-  month: number;
-  day: number;
-  hour: number;
-  minute: number;
-  isTimeUnknown: boolean;
-  region: string;
-}
-
-export interface InterpretationResponse {
+export interface ArticleContent {
+  id: string;
+  category: '부동산 상식' | '청약' | '대출·금융' | '세금' | '오피스텔' | '지식산업센터';
+  subCategory?: string;
+  title: string;
   summary: string;
-  personality: string;
-  wealthLuck: string;
-  careerLuck: string;
-  loveLuck: string;
-  year2026Luck: string;
-  fortuneAdvice: string;
-  luckyElements: {
-    color: string;
-    direction: string;
-    number: string;
-  };
+  sections: {
+    heading: string;
+    body: string;
+    points?: string[];
+    table?: {
+      headers: string[];
+      rows: string[][];
+    };
+    callout?: string;
+  }[];
+  tags: string[];
+  author: string;
+  date: string;
+  views: number;
+  featured?: boolean;
+}
+
+export interface ConsultationInquiry {
+  id: string;
+  name: string;
+  phone: string;
+  category: string;
+  interestRegion: string;
+  propertyId?: string;
+  preferredTime: string;
+  message: string;
+  status: '접수대기' | '상담진행중' | '상담완료';
+  adminMemo?: string;
+  createdAt: string;
+}
+
+export interface NotificationItem {
+  id: string;
+  title: string;
+  message: string;
+  category: '분양' | '대출/금융' | '청약' | '공지';
+  date: string;
+  isRead: boolean;
+  targetId?: string;
+}
+
+export interface RealEstateNews {
+  id: string;
+  title: string;
+  publisher: string;
+  date: string;
+  summary: string;
+  category: string;
+  badge?: string;
+  readTime: string;
+  link?: string;
+  source?: 'rss' | 'ai' | 'manual';
+}
+
+export interface FilterState {
+  keyword: string;
+  propertyType: string;
+  region: string;
+  pyeongGroup: string;
+  priceGroup: string;
+  status: string;
+}
+
+export interface FilterConfig {
+  regions: string[];
+  propertyTypes: string[];
+  pyeongOptions: string[];
+  priceOptions: string[];
+  statusOptions: string[];
 }
