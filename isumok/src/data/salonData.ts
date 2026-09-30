@@ -7,7 +7,7 @@ export const SALON_INFO: SalonInfo = {
   detailAddress: '문정동 래미안·로데오거리 인근 / 102호 전용 주차 공간 완비',
   phonePrimary: '0507-1490-1888',
   phoneSecondary: '02-3012-1888',
-  weekdayHours: '09:00 ~ 18:00',
+  weekdayHours: '10:00 ~ 17:30',
   closedDays: ['수요일', '일요일'],
   staff: '원장 1인 맞춤 전담 시술 (100% 예약 우선제)',
   specialty: '모발과 두피를 천연제품으로 관리하는 곳 (친환경 유기농 저자극 케어)',

@@ -66,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenAdmin }) =>
             <div className="space-y-1.5 text-xs sm:text-sm text-[#cbd2e1]">
               <p className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-[#d4af37]" />
-                <span>평일: <strong className="text-white font-bold">09:00 ~ 18:00</strong></span>
+                <span>평일: <strong className="text-white font-bold">10:00 ~ 17:30</strong></span>
               </p>
               <p className="text-[#ff9f8e] font-bold pl-5">
                 정기 휴무: 매주 수요일, 일요일
