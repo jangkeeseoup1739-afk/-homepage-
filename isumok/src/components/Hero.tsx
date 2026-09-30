@@ -106,7 +106,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="pt-2 text-xs sm:text-sm text-[#cbd2e1] font-medium flex items-center justify-center lg:justify-start gap-3 flex-wrap">
               <span className="flex items-center gap-1.5 text-white">
                 <Clock className="w-4 h-4 text-[#d4af37]" />
-                <span>영업시간: <strong className="text-white">평일 10:00 ~ 17:30</strong></span>
+                <span>영업시간: <strong className="text-white">평일 {SALON_INFO.weekdayHours}</strong></span>
               </span>
               <span className="text-[#595f70]">•</span>
               <span className="text-[#ff9f8e] font-bold">

@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1 text-[#b8bcc8]">
               <Clock className="w-3.5 h-3.5 text-[#d4af37]" />
-              <span>평일 09:00~18:00 (수·일 휴무)</span>
+              <span>평일 10:00~17:30 (수·일 휴무)</span>
             </span>
             <button
               onClick={onOpenAdmin}

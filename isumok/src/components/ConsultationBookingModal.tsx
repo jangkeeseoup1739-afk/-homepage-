@@ -284,15 +284,14 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
 
                     <div>
                       <label className="block text-xs sm:text-sm font-bold text-white mb-1.5">
-                        희망 시간대 (09:00 ~ 17:00)
+                        희망 시간대 (10:00 ~ 17:00)
                       </label>
                       <select
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-lg bg-[#21232d] border border-[#383d4e] text-sm text-white focus:outline-none focus:border-[#d4af37]"
                       >
-                        <option value="09:00">09:00 (오전 첫 타임)</option>
-                        <option value="10:00">10:00</option>
+                        <option value="10:00">10:00 (오전 첫 타임)</option>
                         <option value="11:00">11:00</option>
                         <option value="12:00">12:00</option>
                         <option value="13:00">13:00</option>
@@ -510,7 +509,7 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
                   <Clock className="w-4 h-4 text-[#d4af37]" />
                   <span>전화 상담 가능 시간</span>
                 </div>
-                <p>평일 오전 09:00 ~ 오후 18:00 (매주 수요일, 일요일 정기 휴무)</p>
+                <p>평일 오전 10:00 ~ 오후 5:30 (매주 수요일, 일요일 정기 휴무)</p>
               </div>
             </div>
           )}
