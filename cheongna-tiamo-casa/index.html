@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<!--
+=======================================================================
+  청라 더리브 티아모 Casa — 분양 랜딩페이지 / 담당 연락처 010-8873-7258
+=======================================================================
+
+  [1] 이미지 넣는 법
+      본문 곳곳에 아래와 같은 블록이 있습니다.
+
+        div class="slot" ... data-label="조감도 · 권장 1920x1080"
+          (주석 처리된 img 태그)
+        /div
+
+      각 블록 안에 주석으로 숨겨둔 img 태그가 하나씩 들어 있습니다.
+      그 주석 기호를 지우고 src 값을 실제 이미지 경로로 바꾸면,
+      안내 문구가 자동으로 사라지고 이미지가 꽉 차게 들어갑니다.
+      data-label 에 적힌 권장 사이즈를 참고하세요.
+      이미지 파일은 이 파일과 같은 폴더의 images/ 안에 넣으시면 됩니다.
+
+  [2] 문의 폼 → 구글 시트 연동 (약 5분)
+      1. 구글 드라이브에서 새 스프레드시트 생성,
+         1행에 입력:  접수일시 / 성함 / 연락처 / 추가문의사항
+      2. 상단 메뉴 [확장 프로그램] → [Apps Script]
+      3. 기존 코드를 지우고 아래 코드를 붙여넣기
+
+         function doPost(e) {
+           var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+           var d = e.parameter;
+           sheet.appendRow([new Date(), d.name, d.phone, d.memo]);
+           return ContentService.createTextOutput("ok");
+         }
+
+      4. [배포] → [새 배포] → 유형 [웹 앱]
+           실행 계정 : 나
+           액세스 권한 : 모든 사용자
+         → 배포 후 표시되는 웹 앱 URL 복사
+      5. 이 파일 맨 아래 script 안의
+           const GAS_URL = "";
+         따옴표 안에 복사한 URL을 붙여넣으면 끝입니다.
+
+      ※ URL을 비워두면 폼 전송 시 전화 안내 문구만 표시됩니다.
+
+=======================================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>청라 더리브 티아모 Casa</title>
+<meta name="description" content="청라국제도시 최중심, 지상 46층 초고층 랜드마크. 서울지하철 7호선 청라연장선 커낼웨이역(가칭) 초역세권. 분양문의 010-8873-7258">
+<meta property="og:title" content="청라 더리브 티아모 Casa">
+<meta property="og:description" content="청라국제도시 최중심, 지상 46층 초고층 랜드마크. 7호선 커낼웨이역(가칭) 초역세권. 분양문의 010-8873-7258">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1a30;
+  --navy-2:#102a4c;
+  --navy-3:#16365e;
+  --gold:#c2a36b;
+  --gold-l:#e0cba3;
+  --ink:#1d2430;
+  --gray:#6b7480;
+  --line:#e3e6ea;
+  --bg:#ffffff;
+  --bg-soft:#f6f7f9;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{
+  font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.75;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;
+  padding-bottom:64px;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ── 공통 ───────────────────────────── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.sec{padding:92px 0}
+.sec-soft{background:var(--bg-soft)}
+.sec-dark{background:var(--navy);color:#fff}
+.eyebrow{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4.2vw,46px);
+  letter-spacing:.14em;color:var(--gold);line-height:1;margin-bottom:18px;
+}
+.rule{width:52px;height:2px;background:var(--gold);margin:0 auto 26px}
+.rule.l{margin-left:0}
+h2.tit{
+  font-size:clamp(25px,3.6vw,40px);font-weight:700;line-height:1.35;
+  letter-spacing:-.02em;margin-bottom:16px;
+}
+.sub{font-size:clamp(15px,1.7vw,18px);color:var(--gray);font-weight:400}
+.sec-dark .sub{color:#b9c5d6}
+.center{text-align:center}
+.lead{font-size:clamp(15px,1.7vw,17px);color:#4b5563;max-width:720px;margin:0 auto}
+.sec-dark .lead{color:#c7d2e0}
+
+/* ── 이미지 자리 ─────────────────────── */
+.slot{
+  position:relative;width:100%;aspect-ratio:var(--ar,16/9);
+  background:
+    linear-gradient(135deg,rgba(16,42,76,.06),rgba(194,163,107,.10)),
+    repeating-linear-gradient(45deg,#f3f5f7 0 12px,#eef1f4 12px 24px);
+  border:1px dashed #bcc5d0;border-radius:4px;overflow:hidden;
+}
+.slot::after{
+  content:attr(data-label);position:absolute;inset:0;display:flex;
+  align-items:center;justify-content:center;text-align:center;padding:16px;
+  font-size:13px;letter-spacing:.02em;color:#7c8794;font-weight:500;
+}
+.slot img{width:100%;height:100%;object-fit:cover}
+.slot:has(img){border:0;background:none}
+.slot:has(img)::after{display:none}
+
+/* ── 헤더 ───────────────────────────── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:68px;
+  background:rgba(10,26,48,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.navbar{max-width:var(--maxw);margin:0 auto;padding:0 20px;height:68px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:9px;color:#fff;flex:0 0 auto}
+.brand .mark{
+  width:28px;height:28px;border:1px solid var(--gold);color:var(--gold);
+  display:grid;place-items:center;font-size:11px;font-weight:700;letter-spacing:-.04em;
+}
+.brand b{font-size:17px;font-weight:500;letter-spacing:-.01em}
+.brand i{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--gold-l)}
+nav ul{display:flex;list-style:none;gap:28px;align-items:center}
+nav a{font-size:14.5px;color:#dfe6ef;font-weight:400;transition:color .2s}
+nav a:hover{color:var(--gold-l)}
+nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
+.burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
+.burger span{display:block;width:22px;height:2px;background:#fff;margin:4px 0}
+
+/* ── 히어로 ─────────────────────────── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--navy);overflow:hidden;text-align:center;color:#fff}
+.hero .bg{position:absolute;inset:0}
+.hero .bg .slot{height:100%;aspect-ratio:auto;border:0;border-radius:0;
+  background:radial-gradient(120% 90% at 50% 0%,#1b3f6e 0%,#0a1a30 70%)}
+.hero .bg .slot::after{color:rgba(255,255,255,.30);align-items:flex-end;padding-bottom:58px;font-size:12px}
+.hero .veil{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,26,48,.72) 0%,rgba(10,26,48,.5) 45%,rgba(10,26,48,.9) 100%)}
+.hero .inner{position:relative;z-index:2;width:100%;max-width:100%;padding:120px 20px 80px}
+.hero .pre{font-size:clamp(14px,2vw,17px);letter-spacing:.06em;color:#cdd8e6;margin-bottom:10px}
+.hero .big{font-size:clamp(34px,6.4vw,66px);font-weight:300;letter-spacing:.06em;line-height:1.25;margin-bottom:34px}
+.hero .name{font-size:clamp(23px,3.4vw,34px);font-weight:500;letter-spacing:.02em}
+.hero .name em{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold-l);font-weight:400}
+.hero .gl{width:1px;height:46px;background:linear-gradient(var(--gold),transparent);margin:26px auto}
+.hero .maker{font-size:14px;letter-spacing:.08em;color:#9fb0c6}
+.hero .cta{margin-top:40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:15px 30px;font-size:15px;font-weight:700;letter-spacing:.01em;
+  border-radius:2px;transition:.22s;border:1px solid transparent;cursor:pointer}
+.btn-gold{background:var(--gold);color:#13223a}
+.btn-gold:hover{background:var(--gold-l)}
+.btn-line{border-color:rgba(255,255,255,.55);color:#fff}
+.btn-line:hover{background:#fff;color:var(--navy)}
+.scrolldown{position:absolute;bottom:92px;left:50%;transform:translateX(-50%);
+  z-index:2;font-size:11px;letter-spacing:.2em;color:#9fb0c6}
+
+/* ── 사업개요 표 ─────────────────────── */
+.ov{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:52px}
+.ov dl{display:grid;grid-template-columns:118px 1fr;border-top:1px solid var(--line)}
+.ov dt{padding:15px 14px;background:#f1f3f6;font-size:14px;font-weight:700;color:#36414f;
+  border-bottom:1px solid var(--line);letter-spacing:.06em}
+.ov dd{padding:15px 14px;font-size:14.5px;color:#49525f;border-bottom:1px solid var(--line)}
+
+/* ── 특징 2열 ───────────────────────── */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.split.rev>div:first-child{order:2}
+
+/* ── 전화 배너 ──────────────────────── */
+.callband{background:linear-gradient(100deg,#133a68,#0d2242);color:#fff;text-align:center;padding:62px 20px}
+.callband .t{font-size:17px;letter-spacing:.1em;color:var(--gold-l);margin-bottom:8px}
+.callband .n{font-size:clamp(32px,6vw,54px);font-weight:900;letter-spacing:.02em;display:inline-block}
+.callband .n:hover{color:var(--gold-l)}
+.callband .s{font-size:13px;color:#a9bbd1;margin-top:8px}
+
+/* ── 프리미엄 카드 ──────────────────── */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:54px}
+.card{background:#fff;border:1px solid var(--line);padding:38px 28px 34px;text-align:center;transition:.25s;display:flex;flex-direction:column}
+.card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 14px 34px rgba(16,42,76,.10)}
+.card .no{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--gold);line-height:1}
+.card h3{font-size:20px;font-weight:700;margin:14px 0 12px;letter-spacing:-.01em}
+.card p{font-size:14.5px;color:var(--gray);line-height:1.8;flex:1 0 auto}
+.card .slot{margin-top:22px}
+
+/* ── 평면 ───────────────────────────── */
+.planhead{background:linear-gradient(100deg,#0d2242,#1a3f6e);color:#fff;
+  display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:26px 34px;border-radius:3px}
+.planhead .ty{font-size:46px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.planhead .ty sup{font-size:18px;font-weight:500;vertical-align:super}
+.planhead .pill{border:1px solid rgba(255,255,255,.45);padding:5px 14px;font-size:13px;border-radius:40px}
+.planhead .specs{display:flex;gap:26px;flex-wrap:wrap;font-size:14px;color:#d6e1ee}
+.planhead .specs b{color:#fff;font-weight:700}
+.plangrid{display:grid;grid-template-columns:1fr 1.45fr;gap:22px;margin-top:22px}
+.plangrid .stack{display:grid;gap:22px;align-content:start}
+.capt{font-size:13px;color:var(--gray);text-align:center;margin-top:9px}
+
+/* ── 층별 안내 ──────────────────────── */
+.floors{list-style:none;margin-top:28px;display:grid;gap:10px}
+.floors li{display:flex;gap:14px;align-items:flex-start;font-size:15.5px;color:#d7e1ee}
+.floors b{color:var(--gold-l);flex:0 0 118px;font-weight:700;font-size:14.5px;letter-spacing:.02em}
+
+/* ── 폼 ─────────────────────────────── */
+.formwrap{max-width:660px;margin:46px auto 0;background:#fff;border:1px solid var(--line);
+  padding:42px 38px;border-radius:3px;box-shadow:0 18px 44px rgba(16,42,76,.07)}
+.field{margin-bottom:22px}
+.field label{display:block;font-size:15px;font-weight:700;margin-bottom:7px}
+.field label i{color:#d9534f;font-style:normal;margin-left:3px}
+.field .hint{font-size:12.5px;color:#9aa3ad;margin-bottom:8px}
+.field input[type=text],.field textarea,.field select{
+  width:100%;padding:13px 14px;border:1px solid #d3d9e0;border-radius:2px;
+  font-family:inherit;font-size:15px;color:var(--ink);background:#fff}
+.field input:focus,.field textarea:focus,.field select:focus{outline:0;border-color:var(--navy-3)}
+.field textarea{min-height:96px;resize:vertical}
+.tel3{display:grid;grid-template-columns:92px 1fr 1fr;gap:8px}
+.agree{border:1px solid var(--line);background:#fafbfc;height:116px;overflow-y:auto;
+  padding:14px;font-size:12.5px;color:#7b848f;line-height:1.7;margin-bottom:12px}
+.chk{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:#49525f;cursor:pointer}
+.chk input{margin-top:5px;width:16px;height:16px;accent-color:var(--navy-3);flex:0 0 auto}
+.submit{width:100%;margin-top:24px;padding:17px;background:var(--navy);color:#fff;
+  border:0;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;
+  letter-spacing:.04em;border-radius:2px;transition:.2s}
+.submit:hover{background:var(--navy-3)}
+
+/* ── 푸터 ───────────────────────────── */
+footer{background:#07121f;color:#8e9bab;padding:46px 20px 40px;text-align:center;font-size:13.5px;line-height:2}
+footer .fl{color:#fff;font-weight:700;font-size:15px;letter-spacing:.02em}
+footer .ft{color:var(--gold);font-weight:700}
+footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-width:760px;margin-inline:auto}
+
+/* ── 하단 고정바 ────────────────────── */
+.fixbar{position:fixed;left:0;right:0;bottom:0;z-index:99;display:grid;
+  grid-template-columns:1fr 1fr 1fr;background:var(--navy);border-top:1px solid rgba(255,255,255,.12)}
+.fixbar a{padding:18px 6px;text-align:center;font-size:14.5px;font-weight:700;color:#fff;
+  border-left:1px solid rgba(255,255,255,.12)}
+.fixbar a:first-child{border-left:0}
+.fixbar a.hl{background:var(--gold);color:#13223a}
+
+@media (max-width:900px){
+  .sec{padding:66px 0}
+  nav{display:none}
+  .burger{display:block}
+  nav.open{display:block;position:absolute;top:68px;left:0;right:0;background:var(--navy);padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.12)}
+  nav.open ul{flex-direction:column;gap:0}
+  nav.open li{width:100%;text-align:center}
+  nav.open a{display:block;padding:14px}
+  .ov{grid-template-columns:1fr;gap:0}
+  .ov dl:last-child{border-top:0}
+  .split{grid-template-columns:1fr;gap:32px}
+  .split.rev>div:first-child{order:0}
+  .cards{grid-template-columns:1fr;gap:18px}
+  .plangrid{grid-template-columns:1fr}
+  .formwrap{padding:30px 20px}
+  .floors b{flex-basis:96px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ 헤더 ═══ -->
+<header>
+  <div class="navbar">
+    <a class="brand" href="#top">
+      <span class="mark">청라</span>
+      <b>더리브 티아모</b><i>Casa</i>
+    </a>
+    <nav id="nav">
+      <ul>
+        <li><a href="#overview">개요&amp;입지</a></li>
+        <li><a href="#premium">Premium</a></li>
+        <li><a href="#plan">평면정보</a></li>
+        <li><a href="#design">단지설계 및 배치</a></li>
+        <li><a href="#contact">방문예약</a></li>
+        <li><a class="tel" href="tel:01088737258">유선문의</a></li>
+      </ul>
+    </nav>
+    <button class="burger" id="burger" aria-label="메뉴"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ═══ 히어로 ═══ -->
+<section class="hero" id="top">
+  <div class="bg">
+    <div class="slot" data-label="메인 조감도 / 야경 투시도 · 권장 1920×1080 이상">
+      <!-- <img src="images/hero.jpg" alt="청라 더리브 티아모 Casa 조감도"> -->
+    </div>
+  </div>
+  <div class="veil"></div>
+  <div class="inner">
+    <p class="pre">가장 이상적인 위치에서 시작되는</p>
+    <h1 class="big">또다른 일상</h1>
+    <p class="name">청라 더리브 티아모 <em>Casa</em></p>
+    <div class="gl"></div>
+    <p class="maker">시공사 &nbsp;SGC 이테크건설</p>
+    <div class="cta">
+      <a class="btn btn-gold" href="tel:01088737258">분양문의 010-8873-7258</a>
+      <a class="btn btn-line" href="#contact">방문예약 신청</a>
+    </div>
+  </div>
+  <div class="scrolldown">SCROLL</div>
+</section>
+
+<!-- ═══ 개요 ═══ -->
+<section class="sec" id="overview">
+  <div class="wrap center">
+    <p class="eyebrow">OVERVIEW</p>
+    <div class="rule"></div>
+    <h2 class="tit">청라의 새로운 랜드마크</h2>
+    <p class="sub">청라국제도시의 최중심에 들어서는 초고층 주거공간</p>
+    <p class="lead" style="margin-top:28px">
+      최고 46층 높이로 설계된 3개 동이 스카이브릿지로 하늘에서 연결됩니다.
+      청라국제도시 스카이라인을 새로 그리는 랜드마크 주거공간을 가장 먼저 만나보시기 바랍니다.
+    </p>
+    <div class="slot" style="--ar:16/8;margin-top:46px" data-label="단지 전경 조감도 · 권장 1600×800">
+      <!-- <img src="images/aerial.jpg" alt="단지 조감도"> -->
+    </div>
+
+    <div class="ov" style="text-align:left">
+      <dl>
+        <dt>사 업 명</dt><dd>인천 청라국제도시(157-11) 오피스텔 신축공사</dd>
+        <dt>대지위치</dt><dd>인천광역시 서구 청라동 157-11</dd>
+        <dt>지역지구</dt><dd>경제자유구역, 일반상업지역, 지구단위계획구역, 성장관리권역</dd>
+        <dt>대지면적</dt><dd>10,685.00㎡</dd>
+        <dt>건축면적</dt><dd>5,844.5888㎡</dd>
+      </dl>
+      <dl>
+        <dt>건 폐 율</dt><dd>54.70%</dd>
+        <dt>용 적 률</dt><dd>599.99%</dd>
+        <dt>연 면 적</dt><dd>91,210.6607㎡</dd>
+        <dt>규모/구조</dt><dd>지하 3층 ~ 지상 46층 / 철근콘크리트구조</dd>
+        <dt>주차대수</dt><dd>652대</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 입지 ═══ -->
+<section class="sec sec-soft">
+  <div class="wrap">
+    <div class="split rev">
+      <div>
+        <div class="slot" style="--ar:4/3" data-label="입지도 / 교통망도 · 권장 1200×900">
+          <!-- <img src="images/location.jpg" alt="입지도"> -->
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">LOCATION</p>
+        <div class="rule l"></div>
+        <h2 class="tit">서울지하철 7호선 바로 앞<br>(커낼웨이역)</h2>
+        <p class="sub" style="font-weight:700;color:var(--navy-3)">압도적인 입지</p>
+        <p style="margin-top:20px;font-size:16px;color:#4b5563">
+          청라 더리브 티아모 까사는 현재 착공하여 공사가 진행 중인
+          <b>서울지하철 7호선 청라연장선 커낼웨이역(가칭)</b> 바로 앞에 자리한
+          초역세권 프리미엄 주거공간입니다.
+        </p>
+        <p style="margin-top:14px;font-size:16px;color:#4b5563">
+          단지 지하 1층에서 커낼웨이 및 역사와 바로 연결되어, 날씨와 관계없이
+          쾌적한 동선으로 이동하실 수 있습니다.
+        </p>
+        <a class="btn btn-gold" style="margin-top:26px" href="tel:01088737258">입지 상담 010-8873-7258</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 전화 배너 ═══ -->
+<section class="callband">
+  <p class="t">분양 문의</p>
+  <a class="n" href="tel:01088737258">010-8873-7258</a>
+  <p class="s">모바일에서 번호를 터치하시면 바로 연결됩니다</p>
+</section>
+
+<!-- ═══ 모델하우스 ═══ -->
+<section class="sec">
+  <div class="wrap center">
+    <p class="eyebrow">MODEL HOUSE</p>
+    <div class="rule"></div>
+    <h2 class="tit">모델하우스 방문 안내</h2>
+    <p class="lead" style="margin-top:22px">
+      청라 더리브 티아모 까사 모델하우스는 리뉴얼 오픈하여 운영 중입니다.<br>
+      고품격 주거공간인 만큼 <b>사전 예약제</b>로 운영되오니, 출발하시기 전 반드시 방문 예약을 부탁드립니다.
+    </p>
+    <p class="lead" style="margin-top:14px">
+      당일 예약도 가능하며, 통화가 어려우신 경우 아래 문의하기로 관심고객 등록을 남겨주시면
+      순차적으로 연락드려 안내해 드리고 있습니다.
+    </p>
+    <div class="slot" style="--ar:16/7;margin-top:40px" data-label="모델하우스 내부 / 외관 사진 · 권장 1600×700">
+      <!-- <img src="images/modelhouse.jpg" alt="모델하우스"> -->
+    </div>
+    <div class="cta" style="margin-top:34px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-gold" href="#contact">방문예약 신청하기</a>
+      <a class="btn btn-line" style="border-color:var(--navy);color:var(--navy)" href="tel:01088737258">전화로 예약하기</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 프리미엄 ═══ -->
+<section class="sec sec-soft" id="premium">
+  <div class="wrap center">
+    <p class="eyebrow">PREMIUM</p>
+    <div class="rule"></div>
+    <h2 class="tit">프리미엄</h2>
+    <p class="sub">선택의 이유가 분명한 세 가지</p>
+
+    <div class="cards">
+      <div class="card">
+        <p class="no">01</p>
+        <h3>계약금 4천만 원 정액제</h3>
+        <p>입주 때까지 소액으로<br>부담 없이 투자 가능합니다.</p>
+        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p1.jpg" alt=""> --></div>
+      </div>
+      <div class="card">
+        <p class="no">02</p>
+        <h3>특별한 혜택 제공</h3>
+        <p>선착순 계약자만을 위한<br>특별한 혜택이 제공됩니다.<br>(자세한 내용 유선문의)</p>
+        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p2.jpg" alt=""> --></div>
+      </div>
+      <div class="card">
+        <p class="no">03</p>
+        <h3>우수한 생활 인프라</h3>
+        <p>지하철역부터 롯데마트, 홈플러스,<br>코스트코(예정), 스타필드(예정)까지.</p>
+        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p3.jpg" alt=""> --></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 주방가구 ═══ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="split">
+      <div>
+        <p class="eyebrow" style="font-size:40px;letter-spacing:.02em">Dada</p>
+        <div class="rule l"></div>
+        <h2 class="tit">그동안은 볼 수 없었던<br>최고급형 주방가구 설계</h2>
+        <p style="margin-top:18px;font-size:16px;color:#4b5563">
+          세계 최고의 주방가구 브랜드 <b>Dada</b>가 청라 더리브 티아모 까사와 함께합니다.
+        </p>
+        <p style="margin-top:12px;font-size:16px;color:#4b5563">
+          청라 랜드마크 주거공간에 걸맞은 고급스러운 주방 가구를 적용하여
+          입주민의 만족도를 한층 더 높여드립니다.
+        </p>
+        <p style="margin-top:16px;font-size:13.5px;color:#9aa3ad">
+          ※ 실제 적용 품목 및 사양은 현장 사정에 따라 변경될 수 있습니다.
+        </p>
+      </div>
+      <div>
+        <div class="slot" style="--ar:4/3" data-label="Dada 주방가구 이미지 · 권장 1200×900">
+          <!-- <img src="images/kitchen.jpg" alt="Dada 주방가구"> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 평면정보 ═══ -->
+<section class="sec sec-soft" id="plan">
+  <div class="wrap">
+    <div class="center" style="margin-bottom:44px">
+      <p class="eyebrow">FLOOR PLAN</p>
+      <div class="rule"></div>
+      <h2 class="tit">평면정보</h2>
+      <p class="sub">공간의 가치를 높이는 효율적인 설계</p>
+    </div>
+
+    <div class="planhead">
+      <div class="ty">76<sup>㎡</sup></div>
+      <div class="pill">208실</div>
+      <div class="specs">
+        <span>전용면적 <b>76.6328㎡</b></span>
+        <span>공급면적 <b>107.9174㎡</b></span>
+        <span>계약면적 <b>150.4997㎡</b></span>
+      </div>
+    </div>
+
+    <div class="plangrid">
+      <div class="stack">
+        <div>
+          <div class="slot" style="--ar:1/1" data-label="76㎡ 기본형 평면도 · 권장 1000×1000">
+            <!-- <img src="images/plan-76-basic.jpg" alt="76㎡ 기본형 평면도"> -->
+          </div>
+          <p class="capt">기본형</p>
+        </div>
+        <div>
+          <div class="slot" style="--ar:1/1" data-label="76㎡ 옵션형 평면도 · 권장 1000×1000">
+            <!-- <img src="images/plan-76-option.jpg" alt="76㎡ 옵션형 평면도"> -->
+          </div>
+          <p class="capt">옵션형</p>
+        </div>
+      </div>
+      <div>
+        <div class="slot" style="--ar:4/3" data-label="76㎡ 3D 투시 평면도 · 권장 1400×1050">
+          <!-- <img src="images/plan-76-3d.jpg" alt="76㎡ 3D 평면"> -->
+        </div>
+        <div class="slot" style="--ar:16/6;margin-top:22px" data-label="유상 옵션 패키지 안내 이미지 · 권장 1400×525">
+          <!-- <img src="images/plan-option-pkg.jpg" alt="옵션 패키지"> -->
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:20px;font-size:13.5px;color:#9aa3ad;text-align:center">
+      ※ 상기 평면 및 면적은 소비자의 이해를 돕기 위한 참고자료이며, 실제와 차이가 있을 수 있습니다.
+      자세한 사항은 분양 담당자에게 문의해 주시기 바랍니다.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ 단지설계 ═══ -->
+<section class="sec sec-dark" id="design">
+  <div class="wrap">
+    <div class="center" style="margin-bottom:46px">
+      <p class="eyebrow">SPECIAL DESIGN</p>
+      <div class="rule"></div>
+      <h2 class="tit">단지설계</h2>
+      <p class="sub">초역세권에 고객의 동선을 고려한 랜드마크를 완성하다</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <ul class="floors">
+          <li><b>지하 1층</b><span>커낼웨이 연결 및 7호선 연결 (근린생활시설)</span></li>
+          <li><b>지상 1층</b><span>근린생활시설</span></li>
+          <li><b>지상 2층</b><span>시크릿 정원, 휴게정원</span></li>
+          <li><b>지상 3~46층</b><span>주거공간</span></li>
+          <li><b>지상 20층</b><span>스카이브릿지</span></li>
+        </ul>
+        <p style="margin-top:26px;font-size:15.5px;color:#c7d2e0">
+          3개 동을 하늘에서 잇는 20층 스카이브릿지와 2층 조경 정원이
+          단지 전체를 하나의 생활 공간으로 연결합니다.
+        </p>
+      </div>
+      <div>
+        <div class="slot" style="--ar:4/3" data-label="스카이브릿지 / 특화설계 투시도 · 권장 1200×900">
+          <!-- <img src="images/skybridge.jpg" alt="스카이브릿지"> -->
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:56px">
+      <div class="slot" style="--ar:16/7" data-label="커뮤니티 시설 안내 이미지 · 권장 1600×700">
+        <!-- <img src="images/community.jpg" alt="커뮤니티 시설"> -->
+      </div>
+    </div>
+
+    <div class="plangrid" style="margin-top:22px">
+      <div class="slot" style="--ar:4/3" data-label="단지 배치도 · 권장 1200×900">
+        <!-- <img src="images/siteplan.jpg" alt="단지 배치도"> -->
+      </div>
+      <div class="slot" style="--ar:16/11" data-label="동·호수 배치도 · 권장 1400×960">
+        <!-- <img src="images/unitmap.jpg" alt="동호수 배치도"> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 문의하기 ═══ -->
+<section class="sec" id="contact">
+  <div class="wrap center">
+    <p class="eyebrow">CONTACT</p>
+    <div class="rule"></div>
+    <h2 class="tit">문의하기</h2>
+    <p class="lead" style="margin-top:20px">
+      모델하우스는 방문예약제로 운영 중입니다.<br>
+      방문 예약 및 궁금하신 사항은 언제든지 문의해 주셔도 됩니다. 감사합니다.
+    </p>
+
+    <form class="formwrap" id="inquiry" style="text-align:left">
+      <div class="field">
+        <label for="f-name">성함<i>*</i></label>
+        <p class="hint">예) 홍길동</p>
+        <input type="text" id="f-name" name="name" required>
+      </div>
+
+      <div class="field">
+        <label for="f-p2">연락처<i>*</i></label>
+        <p class="hint">예) 010 1234 5678</p>
+        <div class="tel3">
+          <select id="f-p1" name="p1">
+            <option>010</option><option>011</option><option>016</option>
+            <option>017</option><option>018</option><option>019</option>
+          </select>
+          <input type="text" id="f-p2" name="p2" inputmode="numeric" maxlength="4" required>
+          <input type="text" id="f-p3" name="p3" inputmode="numeric" maxlength="4" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-memo">추가문의사항</label>
+        <p class="hint">예) 00일 00시 통화 가능 or 00일 00시 방문예약</p>
+        <textarea id="f-memo" name="memo"></textarea>
+      </div>
+
+      <div class="field">
+        <label>개인정보 수집 및 이용 동의<i>*</i></label>
+        <div class="agree">
+          <b>개인정보 수집ㆍ이용에 대한 안내</b><br><br>
+          제1조 (수집 및 이용 목적)<br>
+          수집한 개인정보는 분양 상담, 방문 예약 접수 및 관련 안내를 위한 목적으로만 활용합니다.<br><br>
+          제2조 (수집 항목)<br>
+          성함, 연락처, 추가문의사항<br><br>
+          제3조 (보유 및 이용 기간)<br>
+          수집일로부터 분양 종료 시 또는 정보주체의 삭제 요청 시까지 보유하며, 목적 달성 후 지체 없이 파기합니다.<br><br>
+          제4조 (동의 거부 권리)<br>
+          개인정보 수집ㆍ이용에 동의하지 않으실 수 있으며, 이 경우 상담 및 방문 예약 안내가 제한될 수 있습니다.
+        </div>
+        <label class="chk">
+          <input type="checkbox" id="f-agree" required>
+          <span>위 사항을 확인하였으며 개인정보 수집 및 이용에 동의합니다.</span>
+        </label>
+      </div>
+
+      <button class="submit" type="submit">등록 완료</button>
+      <p id="f-msg" style="margin-top:14px;font-size:14px;text-align:center;color:var(--navy-3)"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ═══ 하단 전화 배너 ═══ -->
+<section class="callband">
+  <p class="t">분양문의</p>
+  <p style="font-size:15.5px;color:#d6e1ee;max-width:760px;margin:10px auto 0">
+    청라 더리브 티아모 까사는 현재 공사가 진행 중입니다.
+    모델하우스를 리뉴얼 오픈하여 운영 중이며, 방문은 예약제로 운영되오니
+    출발 전 반드시 연락 주시어 예약해 주시기 바랍니다. (당일 예약 가능)
+  </p>
+  <a class="n" style="margin-top:20px" href="tel:01088737258">Tel. 010-8873-7258</a>
+</section>
+
+<!-- ═══ 푸터 ═══ -->
+<footer>
+  <p class="fl">청라 더리브 티아모 Casa</p>
+  <p>현장명 : 청라 더리브 티아모 까사 ｜ 현장 위치 : 인천광역시 서구 청라동 157-11</p>
+  <p>분양상담 <span class="ft">010-8873-7258</span></p>
+  <p class="dis">
+    ※ 본 홈페이지는 분양 상담을 위한 안내용 페이지이며, 수록된 이미지와 내용은
+    소비자의 이해를 돕기 위한 참고자료로 실제와 차이가 있을 수 있습니다.
+    모든 사항은 관계기관 인ㆍ허가 및 사업계획에 따라 변경될 수 있으니,
+    계약 전 반드시 분양 공고와 계약서를 확인하시기 바랍니다.
+  </p>
+</footer>
+
+<!-- ═══ 하단 고정바 ═══ -->
+<div class="fixbar">
+  <a href="tel:01088737258" class="hl">전화문의</a>
+  <a href="sms:01088737258">문자문의</a>
+  <a href="#contact">방문예약</a>
+</div>
+
+<script>
+/* ↓↓↓ 구글 Apps Script 웹앱 URL을 따옴표 안에 붙여넣으세요 ↓↓↓ */
+const GAS_URL = "";
+
+document.getElementById('burger').addEventListener('click', function(){
+  document.getElementById('nav').classList.toggle('open');
+});
+document.querySelectorAll('#nav a').forEach(function(a){
+  a.addEventListener('click', function(){ document.getElementById('nav').classList.remove('open'); });
+});
+
+document.querySelectorAll('#f-p2,#f-p3').forEach(function(el){
+  el.addEventListener('input', function(){ el.value = el.value.replace(/[^0-9]/g,''); });
+});
+
+document.getElementById('inquiry').addEventListener('submit', function(e){
+  e.preventDefault();
+  var msg  = document.getElementById('f-msg');
+  var name = document.getElementById('f-name').value.trim();
+  var p1   = document.getElementById('f-p1').value;
+  var p2   = document.getElementById('f-p2').value.trim();
+  var p3   = document.getElementById('f-p3').value.trim();
+  var memo = document.getElementById('f-memo').value.trim();
+
+  if(!name){ msg.style.color='#d9534f'; msg.textContent='성함을 입력해 주세요.'; return; }
+  if(p2.length<3 || p3.length<4){ msg.style.color='#d9534f'; msg.textContent='연락처를 정확히 입력해 주세요.'; return; }
+  if(!document.getElementById('f-agree').checked){
+    msg.style.color='#d9534f'; msg.textContent='개인정보 수집 및 이용에 동의해 주세요.'; return;
+  }
+
+  var phone = p1 + '-' + p2 + '-' + p3;
+
+  if(!GAS_URL){
+    msg.style.color='#d9534f';
+    msg.textContent='접수 서버가 아직 연결되지 않았습니다. 010-8873-7258로 연락 부탁드립니다.';
+    return;
+  }
+
+  var btn = this.querySelector('.submit');
+  btn.disabled = true; btn.textContent = '전송 중...';
+
+  var body = new URLSearchParams({ name:name, phone:phone, memo:memo });
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', body:body })
+    .then(function(){
+      msg.style.color='#1a7f4b';
+      msg.textContent='정상적으로 접수되었습니다. 빠른 시간 내에 연락드리겠습니다. 감사합니다.';
+      document.getElementById('inquiry').reset();
+    })
+    .catch(function(){
+      msg.style.color='#d9534f';
+      msg.textContent='전송에 실패했습니다. 010-8873-7258로 연락 부탁드립니다.';
+    })
+    .finally(function(){ btn.disabled=false; btn.textContent='등록 완료'; });
+});
+</script>
+</body>
+</html>
