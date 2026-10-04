@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBooking, onOpenAdmin }) =>
               </a>
             </div>
             <p className="text-xs text-[#cbd2e1]/80 font-normal">
-              시술 중에는 전화 연결이 지연될 수 있습니다. 네이버 예약 이용 시 가장 편리합니다.
+              시술 중에는 전화 연결이 지연될 수 있습니다. 온라인 예약 신청을 이용하시면 가장 편리합니다.
             </p>
           </div>
 

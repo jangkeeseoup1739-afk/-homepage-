@@ -132,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] via-[#e2c158] to-[#b89225] text-[#121316] font-semibold text-xs xl:text-sm shadow-md hover:brightness-105 active:scale-95 transition-all whitespace-nowrap"
           >
             <Calendar className="w-3.5 h-3.5" />
-            <span>네이버 예약 & 상담</span>
+            <span>예약 &amp; 상담 신청</span>
           </button>
         </div>
 
@@ -164,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b89225] text-[#121316] font-semibold text-sm flex items-center justify-center gap-2"
             >
               <Calendar className="w-4 h-4" />
-              네이버 예약 & 1:1 상담 신청
+              예약 &amp; 1:1 상담 신청
             </button>
             <div className="grid grid-cols-2 gap-2 text-center">
               <a

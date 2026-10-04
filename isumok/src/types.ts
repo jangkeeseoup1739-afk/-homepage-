@@ -90,7 +90,6 @@ export interface SalonInfo {
   staff: string;
   specialty: string;
   parking: string;
-  naverBookingUrl: string;
   naverMapUrl: string;
   kakaoMapUrl: string;
 }

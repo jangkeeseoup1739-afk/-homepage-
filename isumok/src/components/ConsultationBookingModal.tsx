@@ -20,7 +20,7 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
   preselectedService,
   onAddBooking
 }) => {
-  const [activeTab, setActiveTab] = useState<'naver' | 'direct' | 'call'>('direct');
+  const [activeTab, setActiveTab] = useState<'direct' | 'call'>('direct');
   
   // Direct form states
   const [name, setName] = useState('');
@@ -147,17 +147,6 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
             <span>1:1 빠른 온라인 상담·예약</span>
           </button>
 
-          <button
-            onClick={() => setActiveTab('naver')}
-            className={`flex-1 py-3.5 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-1.5 border-b-2 ${
-              activeTab === 'naver'
-                ? 'border-[#03c75a] text-[#5ef5a5] bg-[#191b24]'
-                : 'border-transparent text-[#cbd2e1] hover:text-white'
-            }`}
-          >
-            <span className="w-4 h-4 rounded bg-[#03c75a] text-white font-bold text-xs flex items-center justify-center">N</span>
-            <span>네이버 실시간 예약</span>
-          </button>
 
           <button
             onClick={() => setActiveTab('call')}
@@ -401,59 +390,6 @@ export const ConsultationBookingModal: React.FC<ConsultationBookingModalProps> =
                   </div>
                 </form>
               )}
-            </div>
-          )}
-
-          {/* TAB 2: Naver Booking */}
-          {activeTab === 'naver' && (
-            <div className="space-y-6 py-2">
-              <div className="rounded-2xl p-6 bg-gradient-to-br from-[#182a20] to-[#161a22] border border-[#03c75a]/40 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#03c75a] text-white font-black text-lg flex items-center justify-center">
-                    N
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-white">
-                      네이버 스마트플레이스 실시간 예약
-                    </h4>
-                    <p className="text-xs text-[#a0dfb8]">
-                      이수목헤어스토리 실시간 잔여 시간 확인 & 네이버페이 결제 가능
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 text-xs text-[#c2dfce] pt-2">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-[#03c75a] shrink-0 mt-0.5" />
-                    <span>네이버 실시간 일정표를 통해 원하는 날짜와 비어있는 시간을 즉시 확정할 수 있습니다.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-[#03c75a] shrink-0 mt-0.5" />
-                    <span>네이버페이 포인트 적립 혜택 및 방문 인증 리뷰 작성이 가능합니다.</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-[#03c75a] shrink-0 mt-0.5" />
-                    <span>당일 예약이나 긴급 변경은 전화(0507-1490-1888)를 이용해주시면 가장 빠릅니다.</span>
-                  </div>
-                </div>
-
-                <div className="pt-3">
-                  <a
-                    href="https://m.booking.naver.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full py-3.5 rounded-xl bg-[#03c75a] hover:bg-[#02b351] text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition-all"
-                  >
-                    <span>네이버 예약 페이지 바로가기</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#1d202a] border border-[#343849] text-xs sm:text-sm text-[#cbd2e1] space-y-1">
-                <p className="font-bold text-[#f7e7b4]">💡 네이버 예약 이용 팁</p>
-                <p>시술 메뉴(열펌, 링거펌, 커트 등)를 선택하시면 예상 소요 시간만큼 타임 슬롯이 안전하게 배정됩니다.</p>
-              </div>
             </div>
           )}
 

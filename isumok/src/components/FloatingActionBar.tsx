@@ -28,7 +28,7 @@ export const FloatingActionBar: React.FC<FloatingActionBarProps> = ({ onOpenBook
           className="flex-[1.5] py-3 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c660] to-[#b89225] text-[#121316] text-xs font-bold flex items-center justify-center gap-1.5 shadow-lg shadow-[#d4af37]/20 active:scale-95 transition-all"
         >
           <Calendar className="w-4 h-4" />
-          <span>네이버 예약 & 상담</span>
+          <span>예약 &amp; 상담 신청</span>
         </button>
       </div>
 
@@ -55,7 +55,7 @@ export const FloatingActionBar: React.FC<FloatingActionBarProps> = ({ onOpenBook
           className="px-5 py-3 rounded-full bg-gradient-to-r from-[#d4af37] to-[#b89225] text-[#121316] font-bold text-sm flex items-center gap-2 shadow-xl shadow-[#d4af37]/25 hover:brightness-105 active:scale-95 transition-all"
         >
           <Calendar className="w-4 h-4" />
-          <span>네이버 예약 & 1:1 상담</span>
+          <span>예약 &amp; 1:1 상담 신청</span>
         </button>
       </div>
     </>

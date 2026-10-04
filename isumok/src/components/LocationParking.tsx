@@ -177,7 +177,7 @@ export const LocationParking: React.FC = () => {
 
                 <div className="p-3.5 rounded-xl bg-[#1f222d] border border-[#2c303c]">
                   <strong className="text-white block mb-1 text-sm font-bold">🌿 100% 예약 우선제 안내</strong>
-                  <span className="leading-relaxed">원장 1인 시술 특성상 사전 예약 없이 방문 시 대기 시간이 길어질 수 있으므로 네이버 예약 또는 전화 예약을 권장드립니다.</span>
+                  <span className="leading-relaxed">원장 1인 시술 특성상 사전 예약 없이 방문 시 대기 시간이 길어질 수 있으므로 온라인 예약 신청 또는 전화 예약을 권장드립니다.</span>
                 </div>
               </div>
             </div>

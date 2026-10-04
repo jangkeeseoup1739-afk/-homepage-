@@ -12,7 +12,6 @@ export const SALON_INFO: SalonInfo = {
   staff: '원장 1인 맞춤 전담 시술 (100% 예약 우선제)',
   specialty: '모발과 두피를 천연제품으로 관리하는 곳 (친환경 유기농 저자극 케어)',
   parking: '매장 1층 102호 앞 전용 무료 주차 가능',
-  naverBookingUrl: 'https://m.booking.naver.com',
   naverMapUrl: 'https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%86%A1%ED%8C%8C%EA%B5%AC%20%EC%83%88%EB%A7%90%EB%A1%9C17%EA%B8%B8%2012',
   kakaoMapUrl: 'https://map.kakao.com/link/search/서울 송파구 새말로17길 12'
 };
@@ -280,7 +279,7 @@ export const INITIAL_REVIEWS: ReviewItem[] = [
     rating: 5,
     date: '2026.08.19',
     treatment: '커트 (남자) + 펌 (남자)',
-    comment: '남성 헤어도 두상에 맞게 정말 잘 만져주십니다. 아침에 머리 말리기만 해도 형태가 잡혀서 출근 준비 시간 10분 줄었습니다. 네이버 예약하고 오면 대기 시간 없이 바로 시술받을 수 있어 좋습니다.',
+    comment: '남성 헤어도 두상에 맞게 정말 잘 만져주십니다. 아침에 머리 말리기만 해도 형태가 잡혀서 출근 준비 시간 10분 줄었습니다. 미리 예약하고 가면 대기 시간 없이 바로 시술받을 수 있어 좋습니다.',
     verifiedVisit: true,
     likes: 8
   }
