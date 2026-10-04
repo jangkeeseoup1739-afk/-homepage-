@@ -7,6 +7,17 @@
  * 설치 방법은 저장소의 BOOKING_SETUP.md 를 그대로 따라 하시면 됩니다.
  */
 
+/**
+ * 신청 내용을 쌓을 구글 시트의 ID.
+ *
+ * 시트 주소에서 /d/ 와 /edit 사이의 긴 문자열입니다.
+ *   https://docs.google.com/spreadsheets/d/<<여기가 ID>>/edit
+ *
+ * 비워 두면 이 스크립트가 붙어 있는 시트에 씁니다. 다른 문서에서 만든
+ * 스크립트라면 엉뚱한 시트에 쌓이므로, 받을 시트의 ID 를 꼭 적어 두세요.
+ */
+var SPREADSHEET_ID = '';
+
 /** 신청 내용이 쌓일 시트(탭) 이름 */
 var SHEET_NAME = '예약신청';
 
@@ -99,7 +110,8 @@ function doGet() {
 }
 
 function getSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var id = String(SPREADSHEET_ID || '').trim();
+  var ss = id ? SpreadsheetApp.openById(id) : SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(SHEET_NAME);
 
   if (!sheet) {
