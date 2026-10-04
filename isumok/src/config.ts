@@ -11,7 +11,7 @@
  * 비워 두면 예약 내용이 고객 브라우저에만 저장되고 사장님께는 전달되지 않습니다.
  * 이 경우 고객에게 전화 예약을 안내하는 화면이 대신 표시됩니다.
  */
-const FALLBACK_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx6--K0PzNd0LIsCrGqxF3zOeT4nSO0caUBfAfijN4wpMKUKDLZJCv1f3xdns0uG72R/exec';
+const FALLBACK_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwxeOkwJnDz831zQyYGhqvCM8lLic8bx8RrymLrdQPM8HNiS63-C864qnVBGXSrB4BxGg/exec';
 
 // import.meta.env.VITE_* 는 빌드할 때 값으로 통째로 치환됩니다.
 // 중간에 ?. 같은 것을 끼우면 치환이 안 되므로 이 형태를 유지하세요.
