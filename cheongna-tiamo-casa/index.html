@@ -194,6 +194,21 @@ nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .card p{font-size:14.5px;color:var(--gray);line-height:1.8}
 .card .slot{margin-top:22px}
 
+/* ── 내부 사진 갤러리 ───────────────── */
+#interior[hidden]{display:none}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.shots figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:3px;
+  background:#eceff3;cursor:zoom-in}
+.shots img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.shots figure:hover img{transform:scale(1.04)}
+@media (max-width:900px){.shots{grid-template-columns:1fr 1fr;gap:9px}}
+.lightbox{position:fixed;inset:0;z-index:300;background:rgba(7,18,31,.94);display:none;
+  align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.lightbox.on{display:flex}
+.lightbox img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:3px}
+.lightbox button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:18px;
+  background:none;border:0;color:#fff;font-size:30px;line-height:1;cursor:pointer;padding:8px}
+
 /* ── Premium 01~08 ──────────────────── */
 .plist{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px;text-align:left}
 .pitem{background:#fff;border:1px solid var(--line);border-radius:3px;padding:24px 20px}
@@ -720,6 +735,32 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
   </div>
 </section>
 
+<!-- ═══ 내부 사진 ═══ -->
+<!--
+  내부(모델하우스) 사진 넣는 법 — 코드를 고칠 필요가 없습니다.
+  images/interior/ 폴더에 1.jpg, 2.jpg, 3.jpg ... 순서대로 넣기만 하면
+  넣은 사진이 자동으로 이 자리에 나타납니다. (최대 24장)
+  jpg · jpeg · png · webp 모두 됩니다. 사진이 한 장도 없으면
+  이 구역은 통째로 보이지 않으므로 빈칸이 남지 않습니다.
+-->
+<section class="sec" id="interior">
+  <div class="wrap center">
+    <p class="eyebrow">INTERIOR</p>
+    <div class="rule"></div>
+    <h2 class="tit">내부 사진</h2>
+    <p class="sub">모델하우스에서 직접 확인하실 수 있습니다</p>
+    <div class="shots" id="shots"></div>
+    <p style="margin-top:20px;font-size:13.5px;color:#9aa3ad">
+      ※ 사진은 소비자의 이해를 돕기 위한 참고자료이며, 실제와 차이가 있을 수 있습니다.
+    </p>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" id="lightbox-close" aria-label="닫기">&times;</button>
+  <img src="" alt="">
+</div>
+
 <!-- ═══ 평면정보 ═══ -->
 <section class="sec sec-soft" id="plan">
   <div class="wrap">
@@ -1078,6 +1119,52 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
 <script>
 /* ↓↓↓ 구글 Apps Script 웹앱 URL을 따옴표 안에 붙여넣으세요 ↓↓↓ */
 const GAS_URL = "";
+
+/* 내부 사진: images/interior/ 안에 있는 파일만 찾아서 보여준다 */
+(function(){
+  var MAX = 24, EXT = ['jpg','jpeg','png','webp'];
+  var grid = document.getElementById('shots');
+  var sec  = document.getElementById('interior');
+  if(!grid || !sec) return;
+  var left = MAX, found = 0;
+
+  for (var i = 1; i <= MAX; i++) seek(i);
+
+  function seek(i){
+    var tries = 0;
+    var img = new Image();
+    img.alt = '청라 더리브 티아모 Casa 내부 사진 ' + i;
+    img.loading = 'lazy';
+    img.onload = function(){
+      var fig = document.createElement('figure');
+      fig.style.order = i;
+      fig.appendChild(img);
+      grid.appendChild(fig);
+      found++;
+      settle();
+    };
+    img.onerror = function(){
+      tries++;
+      if (tries < EXT.length) { img.src = 'images/interior/' + i + '.' + EXT[tries]; }
+      else { settle(); }
+    };
+    img.src = 'images/interior/' + i + '.' + EXT[0];
+  }
+
+  function settle(){ if (--left === 0 && found === 0) sec.hidden = true; }
+
+  var box = document.getElementById('lightbox');
+  var big = box.querySelector('img');
+  grid.addEventListener('click', function(e){
+    var img = e.target.closest ? e.target.closest('figure') : null;
+    if (!img) return;
+    big.src = img.querySelector('img').src;
+    box.classList.add('on');
+  });
+  function shut(){ box.classList.remove('on'); big.src = ''; }
+  box.addEventListener('click', shut);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') shut(); });
+})();
 
 document.getElementById('burger').addEventListener('click', function(){
   document.getElementById('nav').classList.toggle('open');
