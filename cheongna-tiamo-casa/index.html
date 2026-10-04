@@ -97,6 +97,7 @@ h2.tit{
 .sub{font-size:clamp(15px,1.7vw,18px);color:var(--gray);font-weight:400}
 .sec-dark .sub{color:#b9c5d6}
 .center{text-align:center}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .lead{font-size:clamp(15px,1.7vw,17px);color:#4b5563;max-width:720px;margin:0 auto}
 .sec-dark .lead{color:#c7d2e0}
 
@@ -204,6 +205,17 @@ nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .plangrid{display:grid;grid-template-columns:1fr 1.45fr;gap:22px;margin-top:22px}
 .plangrid .stack{display:grid;gap:22px;align-content:start}
 .capt{font-size:13px;color:var(--gray);text-align:center;margin-top:9px}
+
+/* ── 평형 구성표 ────────────────────── */
+.mixwrap{overflow-x:auto;margin:0 0 44px}
+table.mix{width:100%;min-width:560px;border-collapse:collapse;background:#fff;
+  font-size:14.5px;font-variant-numeric:tabular-nums}
+table.mix th,table.mix td{padding:13px 10px;text-align:center;border-bottom:1px solid var(--line)}
+table.mix thead th{background:var(--navy);color:#fff;font-weight:700;font-size:13.5px;letter-spacing:.04em}
+table.mix tbody th{font-weight:700;color:var(--navy-3);font-size:16px}
+table.mix td{color:#49525f}
+table.mix .py{color:var(--gold);font-weight:700}
+table.mix tfoot th,table.mix tfoot td{background:#f1f3f6;font-weight:700;color:#36414f;border-bottom:0}
 
 /* ── 타입별 평면 ────────────────────── */
 .plantype{margin-bottom:52px}
@@ -454,11 +466,12 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
   <div class="wrap">
     <div class="split">
       <div>
-        <p class="eyebrow" style="font-size:40px;letter-spacing:.02em">Dada</p>
+        <p class="eyebrow" style="font-size:38px;letter-spacing:.02em">Molteni&amp;C <span style="color:var(--navy-3)">|</span> Dada</p>
         <div class="rule l"></div>
         <h2 class="tit">그동안은 볼 수 없었던<br>최고급형 주방가구 설계</h2>
         <p style="margin-top:18px;font-size:16px;color:#4b5563">
-          세계 최고의 주방가구 브랜드 <b>Dada</b>가 청라 더리브 티아모 까사와 함께합니다.
+          세계 최고의 주방가구 브랜드 <b>Molteni&amp;C | Dada</b>가 청라 더리브 티아모 까사와 함께합니다.
+          일부 호실이 아니라 <b>전 호실에 프리미엄 주방 인테리어가 적용</b>됩니다.
         </p>
         <p style="margin-top:12px;font-size:16px;color:#4b5563">
           청라 랜드마크 주거공간에 걸맞은 고급스러운 주방 가구를 적용하여
@@ -469,8 +482,8 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
         </p>
       </div>
       <div>
-        <div class="slot" style="--ar:4/3" data-label="Dada 주방가구 이미지 · 권장 1200×900">
-          <!-- <img src="images/kitchen.jpg" alt="Dada 주방가구"> -->
+        <div class="slot" style="--ar:870/338" data-label="Dada 주방가구 이미지 · 권장 1200×900">
+          <img src="images/kitchen.webp" alt="청라 더리브 티아모 Casa Dada 주방 인테리어">
         </div>
       </div>
     </div>
@@ -485,6 +498,31 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
       <div class="rule"></div>
       <h2 class="tit">평면정보</h2>
       <p class="sub">공간의 가치를 높이는 효율적인 설계</p>
+    </div>
+
+    <p style="text-align:center;font-size:17px;font-weight:700;color:var(--navy-3);margin-bottom:6px">
+      전용 23~25평 구성 · 전 호실 3R 설계
+    </p>
+    <p style="text-align:center;font-size:15px;color:var(--gray);margin-bottom:22px">
+      실수요 선호도가 가장 높은 평형으로 구성해 실거주와 임대수요 모두에 유리합니다.
+    </p>
+
+    <div class="mixwrap">
+      <table class="mix">
+        <caption class="sr-only">타입별 공급호실 및 면적 구성</caption>
+        <thead>
+          <tr><th>Type</th><th>공급호실</th><th>전용면적 ㎡</th><th>전용 평</th><th>계약면적 ㎡</th><th>계약 평</th><th>공급비율</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">76</th><td>208실</td><td>76.64</td><td class="py">23.18</td><td>150.50</td><td>45.53</td><td>39.80%</td></tr>
+          <tr><th scope="row">84A</th><td>208실</td><td>84.99</td><td class="py">25.71</td><td>166.59</td><td>50.40</td><td>39.80%</td></tr>
+          <tr><th scope="row">84B</th><td>104실</td><td>84.99</td><td class="py">25.71</td><td>166.91</td><td>50.50</td><td>19.90%</td></tr>
+          <tr><th scope="row">211</th><td>3실</td><td>211.70</td><td class="py">64.04</td><td>414.43</td><td>125.37</td><td>0.60%</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><th scope="row">합계</th><td>523실</td><td>43,090.50</td><td>13,034.88</td><td>84,558.20</td><td>25,578.86</td><td>100%</td></tr>
+        </tfoot>
+      </table>
     </div>
 
     <article class="plantype">
@@ -632,25 +670,36 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
         </p>
       </div>
       <div>
-        <div class="slot" style="--ar:4/3" data-label="스카이브릿지 / 특화설계 투시도 · 권장 1200×900">
-          <!-- <img src="images/skybridge.jpg" alt="스카이브릿지"> -->
+        <div class="slot" style="--ar:874/474" data-label="스카이브릿지 / 특화설계 투시도 · 권장 1200×900">
+          <img src="images/skybridge.webp" alt="청라 더리브 티아모 Casa 20층 스카이브릿지">
         </div>
       </div>
     </div>
 
     <div style="margin-top:56px">
-      <div class="slot" style="--ar:16/7" data-label="커뮤니티 시설 안내 이미지 · 권장 1600×700">
-        <!-- <img src="images/community.jpg" alt="커뮤니티 시설"> -->
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:8px">단지 내 근린생활시설</h3>
+      <p style="font-size:15.5px;color:#c7d2e0;margin-bottom:18px">
+        대형 음식점부터 병의원까지, 집객력 있는 앵커 테넌트 중심으로 구성됩니다.
+        지하 1층은 커낼스트리트 상권과 이어집니다.
+      </p>
+      <div class="slot" style="--ar:882/474" data-label="근린생활시설 MD 구성">
+        <img src="images/retail.webp" alt="청라 더리브 티아모 Casa 근린생활시설 MD 구성">
       </div>
     </div>
 
-    <div class="plangrid" style="margin-top:22px">
-      <div class="slot" style="--ar:4/3" data-label="단지 배치도 · 권장 1200×900">
-        <!-- <img src="images/siteplan.jpg" alt="단지 배치도"> -->
-      </div>
-      <div class="slot" style="--ar:16/11" data-label="동·호수 배치도 · 권장 1400×960">
-        <!-- <img src="images/unitmap.jpg" alt="동호수 배치도"> -->
-      </div>
+    <div class="plangrid" style="margin-top:26px;grid-template-columns:1fr 1fr">
+      <figure style="margin:0">
+        <div class="slot" style="--ar:880/472" data-label="단지 배치도">
+          <img src="images/siteplan.webp" alt="청라 더리브 티아모 Casa 동간거리 배치도">
+        </div>
+        <figcaption class="capt" style="color:#9fb0c6">동간거리 배치 — 대지 약 100M × 185M</figcaption>
+      </figure>
+      <figure style="margin:0">
+        <div class="slot" style="--ar:878/452" data-label="동·호수 배치도">
+          <img src="images/unitmix.webp" alt="청라 더리브 티아모 Casa 동별 평형 적층도">
+        </div>
+        <figcaption class="capt" style="color:#9fb0c6">동별 적층도 — 101 · 102 · 103동</figcaption>
+      </figure>
     </div>
   </div>
 </section>
