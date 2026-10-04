@@ -10,7 +10,7 @@
  * 비워두면 폼이 "접수되었습니다"를 띄우지 않고 전화번호를 안내합니다.
  * 받지도 못한 신청을 접수됐다고 알리지 않기 위한 동작입니다.
  */
-const BUILT_IN_GAS_URL = '';
+const BUILT_IN_GAS_URL = 'https://script.google.com/macros/s/AKfycbwxeOkwJnDz831zQyYGhqvCM8lLic8bx8RrymLrdQPM8HNiS63-C864qnVBGXSrB4BxGg/exec';
 
 const fromEnv =
   typeof import.meta !== 'undefined' && import.meta.env
