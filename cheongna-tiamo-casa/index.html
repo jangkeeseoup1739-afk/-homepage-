@@ -191,8 +191,19 @@ nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 14px 34px rgba(16,42,76,.10)}
 .card .no{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--gold);line-height:1}
 .card h3{font-size:20px;font-weight:700;margin:14px 0 12px;letter-spacing:-.01em}
-.card p{font-size:14.5px;color:var(--gray);line-height:1.8;flex:1 0 auto}
+.card p{font-size:14.5px;color:var(--gray);line-height:1.8}
 .card .slot{margin-top:22px}
+
+/* ── Premium 01~08 ──────────────────── */
+.plist{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px;text-align:left}
+.pitem{background:#fff;border:1px solid var(--line);border-radius:3px;padding:24px 20px}
+.pitem .n{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.14em;
+  color:var(--gold);display:block;margin-bottom:9px}
+.pitem h4{font-size:16.5px;font-weight:700;line-height:1.4;margin-bottom:10px;letter-spacing:-.01em}
+.pitem p{font-size:14px;color:var(--gray);line-height:1.7}
+.pitem .note{font-size:12.5px;color:#9aa3ad;margin-top:8px}
+@media (max-width:1000px){.plist{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.plist{grid-template-columns:1fr}}
 
 /* ── 평면 ───────────────────────────── */
 .planhead{background:linear-gradient(100deg,#0d2242,#1a3f6e);color:#fff;
@@ -612,19 +623,59 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
         <p class="no">01</p>
         <h3>계약금 4천만 원 정액제</h3>
         <p>입주 때까지 소액으로<br>부담 없이 투자 가능합니다.</p>
-        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p1.jpg" alt=""> --></div>
       </div>
       <div class="card">
         <p class="no">02</p>
         <h3>특별한 혜택 제공</h3>
         <p>선착순 계약자만을 위한<br>특별한 혜택이 제공됩니다.<br>(자세한 내용 유선문의)</p>
-        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p2.jpg" alt=""> --></div>
       </div>
       <div class="card">
         <p class="no">03</p>
         <h3>우수한 생활 인프라</h3>
         <p>지하철역부터 롯데마트, 홈플러스,<br>코스트코(개장), 스타필드(예정)까지.</p>
-        <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p3.jpg" alt=""> --></div>
+      </div>
+    </div>
+
+    <div class="plist">
+      <div class="pitem">
+        <span class="n">Premium 01</span>
+        <h4>청라의 자부심 스카이브릿지</h4>
+        <p>단지의 품격을 높여주는 스카이브릿지로 3개 동이 연결되는 유니크한 외관설계</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 02</span>
+        <h4>최고 43층 랜드마크 가치</h4>
+        <p>최상층 펜트하우스부터 43층 초고층 설계로 청라를 대표할 랜드마크</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 03</span>
+        <h4>7호선 커낼웨이역 초역세권</h4>
+        <p>바로 앞, 7호선 커낼웨이역(예정) 및 서울 지하철 2호선 연장(예정), 청라IC · BRT · GRT 등 쾌속 교통망</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 04</span>
+        <h4>커낼웨이 수변조망</h4>
+        <p>청라호수공원, 커낼웨이 등 쾌적한 자연을 더 가까이 누리는 에코라이프의 완성</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 05</span>
+        <h4>하이엔드 주방가구 Dada 인테리어</h4>
+        <p>세계 최고의 주방가구 몰테니앤씨그룹의 브랜드 Dada 전 세대 적용</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 06</span>
+        <h4>생활가전 무상옵션 제공</h4>
+        <p>FCU 에어컨, 비스포크 냉장고 &amp; 냉동고, 세탁기 &amp; 건조기, 전기오븐, 하이브리드 쿡탑 등 가전가구(일부) 무상제공</p><p class="note">※ 펜트타입(211㎡) 3세대 제외</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 07</span>
+        <h4>한 걸음에 누리는 생활인프라</h4>
+        <p>홈플러스, 롯데마트, 스타필드 청라(예정), 코스트코 등 다채로운 생활 환경</p>
+      </div>
+      <div class="pitem">
+        <span class="n">Premium 08</span>
+        <h4>청라의 끝없는 미래가치</h4>
+        <p>하나금융 · 드림타운, 의료복합단지 아산병원(예정) 등 눈부신 미래가치의 중심</p>
       </div>
     </div>
   </div>
@@ -860,6 +911,15 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
         <img src="images/view.webp" alt="청라 더리브 티아모 Casa 남향 위주 배치 및 방향별 조망">
       </div>
 
+      <h3 style="font-size:20px;font-weight:700;margin:56px 0 8px">입주민 공용공간</h3>
+      <p style="font-size:15.5px;color:#c7d2e0;margin-bottom:18px">
+        1층 웰컴테라스와 커낼스트리트, 2층 시크릿정원과 휴게정원, 20층 스카이브릿지까지
+        단지 안에서 쉬어갈 수 있는 공간을 층마다 두었습니다.
+      </p>
+      <div class="slot" style="--ar:699/446" data-label="공용공간 안내">
+        <img src="images/common.webp" alt="청라 더리브 티아모 Casa 공용공간 — 웰컴테라스 · 시크릿정원 · 휴게정원 · 커낼스트리트 · 아케이드 · 스카이브릿지">
+      </div>
+
       <h3 style="font-size:20px;font-weight:700;margin:56px 0 8px">단지 내 시스템</h3>
       <p style="font-size:15.5px;color:#c7d2e0">
         에너지 제어부터 단지 보안까지, 입주민 생활편의 시스템 12종이 적용됩니다.
@@ -891,18 +951,24 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
 
     <div class="plangrid" style="margin-top:26px;grid-template-columns:1fr 1fr">
       <figure style="margin:0">
-        <div class="slot" style="--ar:880/472" data-label="단지 배치도">
-          <img src="images/siteplan.webp" alt="청라 더리브 티아모 Casa 동간거리 배치도">
+        <div class="slot" style="--ar:726/421" data-label="단지 배치도">
+          <img src="images/siteplan2.webp" alt="청라 더리브 티아모 Casa 단지 배치도">
         </div>
-        <figcaption class="capt" style="color:#9fb0c6">동간거리 배치 — 대지 약 100M × 185M</figcaption>
+        <figcaption class="capt" style="color:#9fb0c6">단지 배치도 — 타입별 호실수 포함</figcaption>
       </figure>
       <figure style="margin:0">
-        <div class="slot" style="--ar:878/452" data-label="동·호수 배치도">
-          <img src="images/unitmix.webp" alt="청라 더리브 티아모 Casa 동별 평형 적층도">
+        <div class="slot" style="--ar:880/472" data-label="동간거리 배치도">
+          <img src="images/siteplan.webp" alt="청라 더리브 티아모 Casa 동간거리 배치도">
         </div>
-        <figcaption class="capt" style="color:#9fb0c6">동별 적층도 — 101 · 102 · 103동</figcaption>
+        <figcaption class="capt" style="color:#9fb0c6">동간거리 — 대지 약 100M × 185M</figcaption>
       </figure>
     </div>
+    <figure style="margin:26px 0 0">
+      <div class="slot" style="--ar:712/608" data-label="동·호수 배치도">
+        <img src="images/unitmap.webp" alt="청라 더리브 티아모 Casa 101 · 102 · 103동 동호수 배치도">
+      </div>
+      <figcaption class="capt" style="color:#9fb0c6">동호수 배치도 — 101 · 102 · 103동</figcaption>
+    </figure>
   </div>
 </section>
 
