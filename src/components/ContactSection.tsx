@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Phone, Calendar, Send, CheckCircle2, ShieldCheck, Clock, AlertCircle } from 'lucide-react';
 import { PROPERTY_INFO } from '../data/propertyData';
 import { triggerPhoneCall } from '../utils/phoneUtils';
+import { submitEnquiry, SALES_PHONE } from '../config';
 
 interface ContactSectionProps {
   initialType?: string;
@@ -59,27 +60,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialType = '8
     setIsSubmitting(true);
 
     try {
-      const gasUrl = localStorage.getItem('TIAMO_GAS_URL');
-      if (gasUrl && gasUrl.trim()) {
-        const body = new URLSearchParams({
-          name: name.trim(),
-          phone: phone.trim(),
-          date: visitDate || '상담 후 협의',
-          time: visitTime,
-          type: planType,
-          memo: memo.trim(),
-          reservationNo: reservationNumber,
-          timestamp: new Date().toISOString()
-        });
+      const sent = await submitEnquiry({
+        name: name.trim(),
+        phone: phone.trim(),
+        date: visitDate || '상담 후 협의',
+        time: visitTime,
+        type: planType,
+        memo: memo.trim(),
+        reservationNo: reservationNumber,
+        timestamp: new Date().toISOString()
+      });
 
-        fetch(gasUrl.trim(), {
-          method: 'POST',
-          mode: 'no-cors',
-          body: body
-        }).catch((err) => console.log('Google Sheets sync notice:', err));
+      if (!sent) {
+        setErrorMsg(
+          `지금은 온라인 접수가 되지 않습니다. 번거로우시겠지만 ${SALES_PHONE}으로 연락 주시면 바로 안내해 드리겠습니다.`
+        );
+        setIsSubmitting(false);
+        return;
       }
 
-      // Save to local storage for persistence
+      // 이 기기에서 접수 내역을 다시 볼 수 있도록 남겨둔다 (전송과는 별개)
       const existing = JSON.parse(localStorage.getItem('TIAMO_RESERVATIONS') || '[]');
       existing.unshift({
         reservationNo: reservationNumber,
@@ -108,7 +108,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialType = '8
       setMemo('');
     } catch (err) {
       console.error(err);
-      setErrorMsg('접수 처리 중 문제가 발생했습니다. 대표번호(010-8873-7258)로 연락 부탁드립니다.');
+      setErrorMsg(`접수 처리 중 문제가 발생했습니다. 대표번호(${SALES_PHONE})로 연락 부탁드립니다.`);
     } finally {
       setIsSubmitting(false);
     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Calendar, Phone, CheckCircle2, Send, ShieldCheck, AlertCircle } from 'lucide-react';
 import { PROPERTY_INFO } from '../data/propertyData';
 import { triggerPhoneCall } from '../utils/phoneUtils';
+import { submitEnquiry, SALES_PHONE } from '../config';
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -61,25 +62,26 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      const gasUrl = localStorage.getItem('TIAMO_GAS_URL');
-      if (gasUrl && gasUrl.trim()) {
-        const body = new URLSearchParams({
-          name: name.trim(),
-          phone: phone.trim(),
-          date: date || '상담 후 협의',
-          time,
-          type,
-          memo: memo.trim(),
-          reservationNo: code,
-          timestamp: new Date().toISOString()
-        });
+      const sent = await submitEnquiry({
+        name: name.trim(),
+        phone: phone.trim(),
+        date: date || '상담 후 협의',
+        time,
+        type,
+        memo: memo.trim(),
+        reservationNo: code,
+        timestamp: new Date().toISOString()
+      });
 
-        fetch(gasUrl.trim(), { method: 'POST', mode: 'no-cors', body }).catch(
-          (err) => console.log('Google Sheets sync notice:', err)
+      if (!sent) {
+        setErrorMsg(
+          `지금은 온라인 예약이 되지 않습니다. 번거로우시겠지만 ${SALES_PHONE}으로 연락 주시면 바로 예약해 드리겠습니다.`
         );
+        setIsSubmitting(false);
+        return;
       }
 
-      // save to localStorage
+      // 이 기기에서 예약 내역을 다시 볼 수 있도록 남겨둔다 (전송과는 별개)
       const existing = JSON.parse(localStorage.getItem('TIAMO_RESERVATIONS') || '[]');
       existing.unshift({
         reservationNo: code,
@@ -98,7 +100,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       setIsSuccess(true);
     } catch (err) {
       console.error(err);
-      setErrorMsg('전송 중 문제가 발생했습니다. 직통 번호(010-8873-7258)로 문의해 주세요.');
+      setErrorMsg(`전송 중 문제가 발생했습니다. 직통 번호(${SALES_PHONE})로 문의해 주세요.`);
     } finally {
       setIsSubmitting(false);
     }

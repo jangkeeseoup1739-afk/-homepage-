@@ -17,6 +17,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { PROPERTY_INFO } from '../data/propertyData';
+import { GAS_URL, IS_INTAKE_READY } from '../config';
 
 export interface ReservationRecord {
   reservationNo: string;
@@ -43,14 +44,10 @@ export const AdminReservationModal: React.FC<AdminReservationModalProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [activeTab, setActiveTab] = useState<'list' | 'google-sheet'>('list');
-  const [gasUrl, setGasUrl] = useState<string>(() => {
-    return localStorage.getItem('TIAMO_GAS_URL') || '';
-  });
   const [sheetDirectUrl, setSheetDirectUrl] = useState<string>(() => {
     return localStorage.getItem('TIAMO_SHEET_DIRECT_URL') || '';
   });
   const [copiedCode, setCopiedCode] = useState(false);
-  const [copiedUrl, setCopiedUrl] = useState(false);
   const [savedSheetUrl, setSavedSheetUrl] = useState(false);
 
   // Load reservations
@@ -164,12 +161,6 @@ export const AdminReservationModal: React.FC<AdminReservationModalProps> = ({
     navigator.clipboard.writeText(googleAppsScriptCode);
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2000);
-  };
-
-  const handleSaveGasUrl = () => {
-    localStorage.setItem('TIAMO_GAS_URL', gasUrl.trim());
-    setCopiedUrl(true);
-    setTimeout(() => setCopiedUrl(false), 2000);
   };
 
   return (
@@ -606,24 +597,41 @@ export const AdminReservationModal: React.FC<AdminReservationModalProps> = ({
                     <li>액세스 권한: <strong>모든 사용자 (Anyone)</strong> 로 설정 후 배포</li>
                   </ul>
 
-                  <div className="flex gap-2">
-                    <input
-                      type="url"
-                      placeholder="https://script.google.com/macros/s/.../exec"
-                      value={gasUrl}
-                      onChange={(e) => setGasUrl(e.target.value)}
-                      className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:border-[#0a1a30] outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleSaveGasUrl}
-                      className="px-4 py-2.5 rounded-xl bg-[#c2a36b] hover:bg-[#e0cba3] text-[#0a1a30] font-bold text-xs transition cursor-pointer"
-                    >
-                      {copiedUrl ? '저장 완료!' : 'URL 저장하기'}
-                    </button>
-                  </div>
-                  <p className="text-[11px] text-gray-400 mt-1">
-                    * 배포 URL을 저장하시면 이후 모든 고객 접수 내용이 구글 시트로 즉시 자동 전송됩니다.
+                  {IS_INTAKE_READY ? (
+                    <div className="rounded-xl border border-green-200 bg-green-50 px-3.5 py-3">
+                      <p className="text-xs font-bold text-green-800">
+                        접수 주소가 설정되어 있습니다
+                      </p>
+                      <p className="text-[11px] text-green-700 mt-1 break-all">
+                        {GAS_URL}
+                      </p>
+                      <p className="text-[11px] text-green-700 mt-1">
+                        모든 방문자의 신청이 이 주소로 전송됩니다.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-3">
+                      <p className="text-xs font-bold text-red-800">
+                        접수 주소가 설정되어 있지 않습니다
+                      </p>
+                      <p className="text-[11px] text-red-700 mt-1 leading-relaxed">
+                        지금은 고객이 폼을 보내도 접수되지 않고, 전화번호 안내만
+                        표시됩니다. 아래 둘 중 한 가지로 설정하시면 됩니다.
+                      </p>
+                      <ul className="list-disc list-inside text-[11px] text-red-700 mt-2 space-y-1">
+                        <li>
+                          Vercel 환경변수에 <strong>VITE_GAS_URL</strong> 추가 후 재배포
+                        </li>
+                        <li>
+                          <strong>src/config.ts</strong> 의 BUILT_IN_GAS_URL 에 주소 입력
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    * 접수 주소는 사이트 전체에 한 번만 설정합니다. 이 화면에서
+                    입력하는 방식은 그 브라우저에만 적용되어, 고객 휴대폰에서는
+                    동작하지 않아 없앴습니다.
                   </p>
                 </div>
               </div>
