@@ -206,6 +206,26 @@ nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .plangrid .stack{display:grid;gap:22px;align-content:start}
 .capt{font-size:13px;color:var(--gray);text-align:center;margin-top:9px}
 
+/* ── 개발호재 타임라인 ──────────────── */
+.devlist{display:grid;gap:22px;margin-top:46px}
+.dev{background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.dev-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:22px 26px 0}
+.dev-when{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1;color:var(--gold);
+  font-weight:600;letter-spacing:.02em;flex:0 0 auto}
+.dev-head h3{font-size:21px;font-weight:700;letter-spacing:-.01em}
+.dev-tag{font-size:12px;font-weight:700;letter-spacing:.06em;padding:4px 11px;border-radius:40px;
+  background:#eef1f5;color:#5b6676}
+.dev-tag.done{background:var(--navy);color:#fff}
+.dev-body{padding:14px 26px 22px}
+.dev-body ul{list-style:none;display:grid;gap:8px}
+.dev-body li{position:relative;padding-left:16px;font-size:15px;color:#4b5563;line-height:1.7}
+.dev-body li::before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;
+  border-radius:50%;background:var(--gold)}
+.dev-body b{color:var(--navy-3)}
+.dev img{width:100%;display:block;background:#16233b}
+@media (max-width:900px){.dev-head{padding:18px 18px 0}.dev-body{padding:12px 18px 18px}
+  .dev-head h3{font-size:18px}.dev-when{font-size:25px}}
+
 /* ── 단지내 시스템 ──────────────────── */
 .sysgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
 .sysgrid li{list-style:none;display:flex;align-items:center;gap:11px;
@@ -312,6 +332,7 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
     <nav id="nav">
       <ul>
         <li><a href="#overview">개요&amp;입지</a></li>
+        <li><a href="#develop">개발호재</a></li>
         <li><a href="#premium">Premium</a></li>
         <li><a href="#plan">평면정보</a></li>
         <li><a href="#design">단지설계 및 배치</a></li>
@@ -408,6 +429,103 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
   </div>
 </section>
 
+
+<!-- ═══ 개발호재 ═══ -->
+<section class="sec sec-soft" id="develop">
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow">DEVELOPMENT</p>
+      <div class="rule"></div>
+      <h2 class="tit">청라의 개발호재</h2>
+      <p class="sub">이미 들어선 것부터 앞으로 들어설 것까지</p>
+      <p class="lead" style="margin-top:24px">
+        청라국제도시는 지금도 짓고 있는 도시입니다.
+        2024년 코스트코 개장을 시작으로 교통 · 업무 · 상업 · 의료 인프라가 차례로 들어섭니다.
+      </p>
+    </div>
+
+    <div class="devlist">
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2024.08</span>
+          <h3>코스트코 청라점</h3>
+          <span class="dev-tag done">오픈 완료</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>약 <b>18,000평</b> 대규모 부지에 조성, 100% 지상 야외 주차 가능</li>
+          <li>일반 마트부터 창고형 쇼핑까지 <b>청라 완결형 몰세권</b> 완성</li>
+          </ul>
+        </div>
+        <img src="images/dev-costco.webp" alt="코스트코 청라점 위치 및 전경">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2026.01</span>
+          <h3>청라하늘대교</h3>
+          <span class="dev-tag">개통 예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li><b>4.68km 왕복 6차선</b> 해상교량으로 영종과 청라를 직결</li>
+          <li>인천국제공항까지 <b>50분 → 20분대</b>로 단축</li>
+          </ul>
+        </div>
+        <img src="images/dev-bridge.webp" alt="청라하늘대교 위치 및 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2026.05</span>
+          <h3>하나금융그룹 HQ</h3>
+          <span class="dev-tag">준공 예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>지하 7층 ~ 지상 15층, 연면적 약 <b>13만㎡</b> 규모의 핵심 신사옥</li>
+          <li>업무 · 연수 · 상업시설이 결합된 금융 허브 조성</li>
+          <li>약 <b>4천여 명</b>의 고연봉 핵심인력 유입으로 임대수요 확보</li>
+          </ul>
+        </div>
+        <img src="images/dev-hana.webp" alt="하나금융그룹 HQ 위치 및 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2028</span>
+          <h3>스타필드 &amp; 돔구장</h3>
+          <span class="dev-tag">예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>지하 3층 ~ 지상 9층, <b>세계 최초 복합쇼핑몰 + 돔구장(2만 3천석)</b></li>
+          <li>쇼핑몰 · 야구장 · 호텔이 한곳에 어우러진 멀티엔터테인먼트</li>
+          <li>연간 약 <b>2,500만 명</b>의 광역 유동인구 흡수</li>
+          </ul>
+        </div>
+        <img src="images/dev-starfield.webp" alt="스타필드 청라 및 돔구장 위치와 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2029 하반기</span>
+          <h3>서울아산청라병원</h3>
+          <span class="dev-tag">예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li><b>800병상</b> 규모, 암 · 심뇌혈관 등 중증질환 전문센터 운영 예정</li>
+          <li>의료 종사 전문직 약 <b>5천여 명</b> 유입으로 직주수요 기대</li>
+          </ul>
+        </div>
+        <img src="images/dev-hospital.webp" alt="서울아산청라병원 위치 및 조감도">
+      </article>
+    </div>
+
+    <p style="margin-top:22px;font-size:13.5px;color:#9aa3ad;text-align:center">
+      ※ 개발 계획은 관계기관의 사정에 따라 일정과 내용이 변경되거나 취소될 수 있습니다.
+      계약 전 반드시 직접 확인하시기 바랍니다.
+    </p>
+  </div>
+</section>
+
 <!-- ═══ 전화 배너 ═══ -->
 <section class="callband">
   <p class="t">분양 문의</p>
@@ -463,7 +581,7 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
       <div class="card">
         <p class="no">03</p>
         <h3>우수한 생활 인프라</h3>
-        <p>지하철역부터 롯데마트, 홈플러스,<br>코스트코(예정), 스타필드(예정)까지.</p>
+        <p>지하철역부터 롯데마트, 홈플러스,<br>코스트코(개장), 스타필드(예정)까지.</p>
         <div class="slot" style="--ar:4/3" data-label="이미지 · 권장 800×600"><!-- <img src="images/p3.jpg" alt=""> --></div>
       </div>
     </div>
