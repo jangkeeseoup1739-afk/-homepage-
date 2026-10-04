@@ -195,7 +195,7 @@ nav a.tel{color:var(--gold);font-weight:700;letter-spacing:.01em}
 .card .slot{margin-top:22px}
 
 /* ── 내부 사진 갤러리 ───────────────── */
-#interior[hidden]{display:none}
+#interior[hidden],#exterior[hidden]{display:none}
 .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
 .shots figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:3px;
   background:#eceff3;cursor:zoom-in}
@@ -358,10 +358,12 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
     <nav id="nav">
       <ul>
         <li><a href="#overview">개요&amp;입지</a></li>
-        <li><a href="#develop">개발호재</a></li>
+        <li><a href="#exterior">단지전경</a></li>
+        <li><a href="#interior">내부사진</a></li>
         <li><a href="#premium">Premium</a></li>
         <li><a href="#plan">평면정보</a></li>
-        <li><a href="#design">단지설계 및 배치</a></li>
+        <li><a href="#design">단지설계</a></li>
+        <li><a href="#develop">개발호재</a></li>
         <li><a href="#contact">방문예약</a></li>
         <li><a class="tel" href="tel:01088737258">유선문의</a></li>
       </ul>
@@ -426,6 +428,24 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
   </div>
 </section>
 
+<!-- ═══ 단지 전경 ═══ -->
+<!--
+  단지 전경 사진 넣는 법 — 코드를 고칠 필요가 없습니다.
+  images/exterior/ 폴더에 1.jpg, 2.jpg ... 순서대로 넣기만 하면 됩니다.
+-->
+<section class="sec sec-soft" id="exterior">
+  <div class="wrap center">
+    <p class="eyebrow">EXTERIOR</p>
+    <div class="rule"></div>
+    <h2 class="tit">단지 전경</h2>
+    <p class="sub">청라의 스카이라인을 새로 그리는 외관</p>
+    <div class="shots" id="shots-exterior"></div>
+    <p style="margin-top:20px;font-size:13.5px;color:#9aa3ad">
+      ※ 사진과 투시도는 소비자의 이해를 돕기 위한 참고자료이며, 실제와 차이가 있을 수 있습니다.
+    </p>
+  </div>
+</section>
+
 <!-- ═══ 입지 ═══ -->
 <section class="sec sec-soft">
   <div class="wrap">
@@ -466,144 +486,6 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
 </section>
 
 
-<!-- ═══ 개발호재 ═══ -->
-<section class="sec sec-soft" id="develop">
-  <div class="wrap">
-    <div class="center">
-      <p class="eyebrow">DEVELOPMENT</p>
-      <div class="rule"></div>
-      <h2 class="tit">청라의 개발호재</h2>
-      <p class="sub">이미 들어선 것부터 앞으로 들어설 것까지</p>
-      <p class="lead" style="margin-top:24px">
-        청라국제도시는 지금도 짓고 있는 도시입니다.
-        2024년 코스트코 개장을 시작으로 교통 · 업무 · 상업 · 의료 인프라가 차례로 들어섭니다.
-      </p>
-    </div>
-
-    <figure style="margin:40px 0 0">
-      <img src="images/dev-status.webp" alt="청라지구 개발 현황도 — 더리브 티아모 Casa 위치와 주요 개발 10건"
-           style="width:100%;display:block;border:1px solid var(--line);border-radius:3px">
-      <figcaption class="capt">청라지구 개발 현황 — 단지 위치와 주요 개발 10건</figcaption>
-    </figure>
-
-    <div class="devlist">
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2024.08</span>
-          <h3>코스트코 청라점</h3>
-          <span class="dev-tag done">오픈 완료</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li>약 <b>18,000평</b> 대규모 부지에 조성, 100% 지상 야외 주차 가능</li>
-          <li>일반 마트부터 창고형 쇼핑까지 <b>청라 완결형 몰세권</b> 완성</li>
-          </ul>
-        </div>
-        <img src="images/dev-costco.webp" alt="코스트코 청라점 위치 및 전경">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2026.01</span>
-          <h3>청라하늘대교</h3>
-          <span class="dev-tag done">개통 완료</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li><b>4.68km 왕복 6차선</b> 해상교량으로 영종과 청라를 직결</li>
-          <li>인천국제공항까지 <b>50분 → 20분대</b>로 단축</li>
-          </ul>
-        </div>
-        <img src="images/dev-bridge.webp" alt="청라하늘대교 위치 및 조감도">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2026.05</span>
-          <h3>하나금융그룹 HQ</h3>
-          <span class="dev-tag done">준공 완료</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li>지하 7층 ~ 지상 15층, 연면적 약 <b>13만㎡</b> 규모의 핵심 신사옥</li>
-          <li>업무 · 연수 · 상업시설이 결합된 금융 허브 조성</li>
-          <li>약 <b>4천여 명</b>의 고연봉 핵심인력 유입으로 임대수요 확보</li>
-          </ul>
-        </div>
-        <img src="images/dev-hana.webp" alt="하나금융그룹 HQ 위치 및 조감도">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2028</span>
-          <h3>스타필드 &amp; 돔구장</h3>
-          <span class="dev-tag">예정</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li>지하 3층 ~ 지상 9층, <b>세계 최초 복합쇼핑몰 + 돔구장(2만 3천석)</b></li>
-          <li>쇼핑몰 · 야구장 · 호텔이 한곳에 어우러진 멀티엔터테인먼트</li>
-          <li>연간 약 <b>2,500만 명</b>의 광역 유동인구 흡수</li>
-          </ul>
-        </div>
-        <img src="images/dev-starfield.webp" alt="스타필드 청라 및 돔구장 위치와 조감도">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2029 하반기</span>
-          <h3>서울아산청라병원</h3>
-          <span class="dev-tag">예정</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li><b>800병상</b> 규모, 암 · 심뇌혈관 등 중증질환 전문센터 운영 예정</li>
-          <li>의료 종사 전문직 약 <b>5천여 명</b> 유입으로 직주수요 기대</li>
-          </ul>
-        </div>
-        <img src="images/dev-hospital.webp" alt="서울아산청라병원 위치 및 조감도">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2030.10</span>
-          <h3>서울지하철 7호선 청라연장</h3>
-          <span class="dev-tag">1단계 예정</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li>석남 ~ 청라국제도시역 총 <b>15.7km</b> 구간에 <b>8개 역사</b> 신설 예정</li>
-          <li>단지 접면 <b>커낼웨이역(가칭)</b>이 그중 하나</li>
-          <li>환승 없이 서울 생활권 — <b>2033년 완전 개통</b> 예정</li>
-          </ul>
-        </div>
-        <img src="images/dev-line7.webp" alt="서울지하철 7호선 청라연장 노선도">
-      </article>
-      <article class="dev">
-        <div class="dev-head">
-          <span class="dev-when">2033</span>
-          <h3>경인고속도로 지하화</h3>
-          <span class="dev-tag">진행 중</span>
-        </div>
-        <div class="dev-body">
-          <ul>
-          <li>서인천IC ~ 신월IC 약 <b>15.3km</b> 구간 지하화 (총연장 19.3km)</li>
-          <li>도심 상습 정체구간 해소로 서울 중심권 진입 속도 개선</li>
-          <li>청라에서 여의도까지 자차 <b>30분대</b> 진입 가능</li>
-          </ul>
-        </div>
-        <img src="images/dev-expressway.webp" alt="경인고속도로 지하화 조감도">
-      </article>
-    </div>
-
-    <figure style="margin:34px 0 0">
-      <img src="images/dev-compare.webp" alt="송도국제도시와 청라국제도시 비교 자료"
-           style="width:100%;display:block;border:1px solid var(--line);border-radius:3px">
-      <figcaption class="capt">송도국제도시와의 비교 — 시행사 제공 자료</figcaption>
-    </figure>
-
-    <p style="margin-top:22px;font-size:13.5px;color:#9aa3ad;text-align:center">
-      ※ 개발 계획은 관계기관의 사정에 따라 일정과 내용이 변경되거나 취소될 수 있습니다.
-      계약 전 반드시 직접 확인하시기 바랍니다.
-    </p>
-  </div>
-</section>
-
 <!-- ═══ 전화 배너 ═══ -->
 <section class="callband">
   <p class="t">분양 문의</p>
@@ -634,6 +516,32 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
     </div>
   </div>
 </section>
+
+<!-- ═══ 내부 사진 ═══ -->
+<!--
+  내부(모델하우스) 사진 넣는 법 — 코드를 고칠 필요가 없습니다.
+  images/interior/ 폴더에 1.jpg, 2.jpg, 3.jpg ... 순서대로 넣기만 하면
+  넣은 사진이 자동으로 이 자리에 나타납니다. (최대 24장)
+  jpg · jpeg · png · webp 모두 됩니다. 사진이 한 장도 없으면
+  이 구역은 통째로 보이지 않으므로 빈칸이 남지 않습니다.
+-->
+<section class="sec" id="interior">
+  <div class="wrap center">
+    <p class="eyebrow">INTERIOR</p>
+    <div class="rule"></div>
+    <h2 class="tit">내부 사진</h2>
+    <p class="sub">모델하우스에서 직접 확인하실 수 있습니다</p>
+    <div class="shots" id="shots-interior"></div>
+    <p style="margin-top:20px;font-size:13.5px;color:#9aa3ad">
+      ※ 사진은 소비자의 이해를 돕기 위한 참고자료이며, 실제와 차이가 있을 수 있습니다.
+    </p>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button type="button" id="lightbox-close" aria-label="닫기">&times;</button>
+  <img src="" alt="">
+</div>
 
 <!-- ═══ 프리미엄 ═══ -->
 <section class="sec sec-soft" id="premium">
@@ -734,32 +642,6 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
     </div>
   </div>
 </section>
-
-<!-- ═══ 내부 사진 ═══ -->
-<!--
-  내부(모델하우스) 사진 넣는 법 — 코드를 고칠 필요가 없습니다.
-  images/interior/ 폴더에 1.jpg, 2.jpg, 3.jpg ... 순서대로 넣기만 하면
-  넣은 사진이 자동으로 이 자리에 나타납니다. (최대 24장)
-  jpg · jpeg · png · webp 모두 됩니다. 사진이 한 장도 없으면
-  이 구역은 통째로 보이지 않으므로 빈칸이 남지 않습니다.
--->
-<section class="sec" id="interior">
-  <div class="wrap center">
-    <p class="eyebrow">INTERIOR</p>
-    <div class="rule"></div>
-    <h2 class="tit">내부 사진</h2>
-    <p class="sub">모델하우스에서 직접 확인하실 수 있습니다</p>
-    <div class="shots" id="shots"></div>
-    <p style="margin-top:20px;font-size:13.5px;color:#9aa3ad">
-      ※ 사진은 소비자의 이해를 돕기 위한 참고자료이며, 실제와 차이가 있을 수 있습니다.
-    </p>
-  </div>
-</section>
-
-<div class="lightbox" id="lightbox" aria-hidden="true">
-  <button type="button" id="lightbox-close" aria-label="닫기">&times;</button>
-  <img src="" alt="">
-</div>
 
 <!-- ═══ 평면정보 ═══ -->
 <section class="sec sec-soft" id="plan">
@@ -1023,6 +905,144 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
   </div>
 </section>
 
+<!-- ═══ 개발호재 ═══ -->
+<section class="sec sec-soft" id="develop">
+  <div class="wrap">
+    <div class="center">
+      <p class="eyebrow">DEVELOPMENT</p>
+      <div class="rule"></div>
+      <h2 class="tit">청라의 개발호재</h2>
+      <p class="sub">이미 들어선 것부터 앞으로 들어설 것까지</p>
+      <p class="lead" style="margin-top:24px">
+        청라국제도시는 지금도 짓고 있는 도시입니다.
+        2024년 코스트코 개장을 시작으로 교통 · 업무 · 상업 · 의료 인프라가 차례로 들어섭니다.
+      </p>
+    </div>
+
+    <figure style="margin:40px 0 0">
+      <img src="images/dev-status.webp" alt="청라지구 개발 현황도 — 더리브 티아모 Casa 위치와 주요 개발 10건"
+           style="width:100%;display:block;border:1px solid var(--line);border-radius:3px">
+      <figcaption class="capt">청라지구 개발 현황 — 단지 위치와 주요 개발 10건</figcaption>
+    </figure>
+
+    <div class="devlist">
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2024.08</span>
+          <h3>코스트코 청라점</h3>
+          <span class="dev-tag done">오픈 완료</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>약 <b>18,000평</b> 대규모 부지에 조성, 100% 지상 야외 주차 가능</li>
+          <li>일반 마트부터 창고형 쇼핑까지 <b>청라 완결형 몰세권</b> 완성</li>
+          </ul>
+        </div>
+        <img src="images/dev-costco.webp" alt="코스트코 청라점 위치 및 전경">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2026.01</span>
+          <h3>청라하늘대교</h3>
+          <span class="dev-tag done">개통 완료</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li><b>4.68km 왕복 6차선</b> 해상교량으로 영종과 청라를 직결</li>
+          <li>인천국제공항까지 <b>50분 → 20분대</b>로 단축</li>
+          </ul>
+        </div>
+        <img src="images/dev-bridge.webp" alt="청라하늘대교 위치 및 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2026.05</span>
+          <h3>하나금융그룹 HQ</h3>
+          <span class="dev-tag done">준공 완료</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>지하 7층 ~ 지상 15층, 연면적 약 <b>13만㎡</b> 규모의 핵심 신사옥</li>
+          <li>업무 · 연수 · 상업시설이 결합된 금융 허브 조성</li>
+          <li>약 <b>4천여 명</b>의 고연봉 핵심인력 유입으로 임대수요 확보</li>
+          </ul>
+        </div>
+        <img src="images/dev-hana.webp" alt="하나금융그룹 HQ 위치 및 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2028</span>
+          <h3>스타필드 &amp; 돔구장</h3>
+          <span class="dev-tag">예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>지하 3층 ~ 지상 9층, <b>세계 최초 복합쇼핑몰 + 돔구장(2만 3천석)</b></li>
+          <li>쇼핑몰 · 야구장 · 호텔이 한곳에 어우러진 멀티엔터테인먼트</li>
+          <li>연간 약 <b>2,500만 명</b>의 광역 유동인구 흡수</li>
+          </ul>
+        </div>
+        <img src="images/dev-starfield.webp" alt="스타필드 청라 및 돔구장 위치와 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2029 하반기</span>
+          <h3>서울아산청라병원</h3>
+          <span class="dev-tag">예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li><b>800병상</b> 규모, 암 · 심뇌혈관 등 중증질환 전문센터 운영 예정</li>
+          <li>의료 종사 전문직 약 <b>5천여 명</b> 유입으로 직주수요 기대</li>
+          </ul>
+        </div>
+        <img src="images/dev-hospital.webp" alt="서울아산청라병원 위치 및 조감도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2030.10</span>
+          <h3>서울지하철 7호선 청라연장</h3>
+          <span class="dev-tag">1단계 예정</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>석남 ~ 청라국제도시역 총 <b>15.7km</b> 구간에 <b>8개 역사</b> 신설 예정</li>
+          <li>단지 접면 <b>커낼웨이역(가칭)</b>이 그중 하나</li>
+          <li>환승 없이 서울 생활권 — <b>2033년 완전 개통</b> 예정</li>
+          </ul>
+        </div>
+        <img src="images/dev-line7.webp" alt="서울지하철 7호선 청라연장 노선도">
+      </article>
+      <article class="dev">
+        <div class="dev-head">
+          <span class="dev-when">2033</span>
+          <h3>경인고속도로 지하화</h3>
+          <span class="dev-tag">진행 중</span>
+        </div>
+        <div class="dev-body">
+          <ul>
+          <li>서인천IC ~ 신월IC 약 <b>15.3km</b> 구간 지하화 (총연장 19.3km)</li>
+          <li>도심 상습 정체구간 해소로 서울 중심권 진입 속도 개선</li>
+          <li>청라에서 여의도까지 자차 <b>30분대</b> 진입 가능</li>
+          </ul>
+        </div>
+        <img src="images/dev-expressway.webp" alt="경인고속도로 지하화 조감도">
+      </article>
+    </div>
+
+    <figure style="margin:34px 0 0">
+      <img src="images/dev-compare.webp" alt="송도국제도시와 청라국제도시 비교 자료"
+           style="width:100%;display:block;border:1px solid var(--line);border-radius:3px">
+      <figcaption class="capt">송도국제도시와의 비교 — 시행사 제공 자료</figcaption>
+    </figure>
+
+    <p style="margin-top:22px;font-size:13.5px;color:#9aa3ad;text-align:center">
+      ※ 개발 계획은 관계기관의 사정에 따라 일정과 내용이 변경되거나 취소될 수 있습니다.
+      계약 전 반드시 직접 확인하시기 바랍니다.
+    </p>
+  </div>
+</section>
+
 <!-- ═══ 문의하기 ═══ -->
 <section class="sec" id="contact">
   <div class="wrap center">
@@ -1120,47 +1140,56 @@ footer .dis{margin-top:20px;font-size:12px;color:#5d6977;line-height:1.85;max-wi
 /* ↓↓↓ 구글 Apps Script 웹앱 URL을 따옴표 안에 붙여넣으세요 ↓↓↓ */
 const GAS_URL = "";
 
-/* 내부 사진: images/interior/ 안에 있는 파일만 찾아서 보여준다 */
+/* 사진 갤러리: 폴더에 들어있는 파일만 찾아서 보여준다.
+   images/exterior/ → 단지 전경, images/interior/ → 내부 사진.
+   1.jpg, 2.jpg ... 로 넣기만 하면 되고 코드는 고칠 필요가 없다. */
 (function(){
   var MAX = 24, EXT = ['jpg','jpeg','png','webp'];
-  var grid = document.getElementById('shots');
-  var sec  = document.getElementById('interior');
-  if(!grid || !sec) return;
-  var left = MAX, found = 0;
 
-  for (var i = 1; i <= MAX; i++) seek(i);
+  gallery('exterior', 'shots-exterior', 'images/exterior/', '단지 전경');
+  gallery('interior', 'shots-interior', 'images/interior/', '내부');
 
-  function seek(i){
-    var tries = 0;
-    var img = new Image();
-    img.alt = '청라 더리브 티아모 Casa 내부 사진 ' + i;
-    img.loading = 'lazy';
-    img.onload = function(){
-      var fig = document.createElement('figure');
-      fig.style.order = i;
-      fig.appendChild(img);
-      grid.appendChild(fig);
-      found++;
-      settle();
-    };
-    img.onerror = function(){
-      tries++;
-      if (tries < EXT.length) { img.src = 'images/interior/' + i + '.' + EXT[tries]; }
-      else { settle(); }
-    };
-    img.src = 'images/interior/' + i + '.' + EXT[0];
+  function gallery(secId, gridId, dir, label){
+    var grid = document.getElementById(gridId);
+    var sec  = document.getElementById(secId);
+    if (!grid || !sec) return;
+    var left = MAX, found = 0;
+
+    for (var i = 1; i <= MAX; i++) seek(i);
+
+    function seek(i){
+      var tries = 0;
+      var img = new Image();
+      img.alt = '청라 더리브 티아모 Casa ' + label + ' 사진 ' + i;
+      img.loading = 'lazy';
+      img.onload = function(){
+        var fig = document.createElement('figure');
+        fig.style.order = i;
+        fig.appendChild(img);
+        grid.appendChild(fig);
+        found++;
+        settle();
+      };
+      img.onerror = function(){
+        tries++;
+        if (tries < EXT.length) { img.src = dir + i + '.' + EXT[tries]; }
+        else { settle(); }
+      };
+      img.src = dir + i + '.' + EXT[0];
+    }
+
+    function settle(){ if (--left === 0 && found === 0) sec.hidden = true; }
+
+    grid.addEventListener('click', function(e){
+      var fig = e.target.closest ? e.target.closest('figure') : null;
+      if (!fig) return;
+      open(fig.querySelector('img').src);
+    });
   }
-
-  function settle(){ if (--left === 0 && found === 0) sec.hidden = true; }
 
   var box = document.getElementById('lightbox');
   var big = box.querySelector('img');
-  grid.addEventListener('click', function(e){
-    var img = e.target.closest ? e.target.closest('figure') : null;
-    if (!img) return;
-    big.src = img.querySelector('img').src;
-    box.classList.add('on');
-  });
+  function open(src){ big.src = src; box.classList.add('on'); }
   function shut(){ box.classList.remove('on'); big.src = ''; }
   box.addEventListener('click', shut);
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') shut(); });
