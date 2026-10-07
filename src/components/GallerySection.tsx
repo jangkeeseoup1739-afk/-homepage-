@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Maximize2, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { IMAGES } from '../data/propertyData';
+import { useFolderPhotos } from '../hooks/useFolderPhotos';
 
 interface GallerySectionProps {
   onOpenLightbox: (src: string, alt: string) => void;
@@ -8,6 +9,35 @@ interface GallerySectionProps {
 
 export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenLightbox }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'exterior' | 'interior' | 'location'>('all');
+
+  // public/gallery/<폴더>/ 에 올려둔 사진. 올리기만 하면 여기에 붙는다.
+  const addedExterior = useFolderPhotos('/gallery/exterior/');
+  const addedInterior = useFolderPhotos('/gallery/interior/');
+  const addedLocation = useFolderPhotos('/gallery/location/');
+
+  const addedItems = [
+    ...addedExterior.map((src, i) => ({
+      id: 9000 + i,
+      category: 'exterior',
+      src,
+      title: '단지 전경',
+      subtitle: '청라 더리브 티아모 Casa'
+    })),
+    ...addedInterior.map((src, i) => ({
+      id: 9100 + i,
+      category: 'interior',
+      src,
+      title: '내부',
+      subtitle: '모델하우스'
+    })),
+    ...addedLocation.map((src, i) => ({
+      id: 9200 + i,
+      category: 'location',
+      src,
+      title: '주변 입지',
+      subtitle: '청라국제도시'
+    }))
+  ];
 
   const galleryItems = [
     {
@@ -96,7 +126,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onOpenLightbox }
     }
   ];
 
-  const filteredItems = galleryItems.filter((item) => {
+  // 새로 올린 사진을 앞에 둔다
+  const allItems = [...addedItems, ...galleryItems];
+
+  const filteredItems = allItems.filter((item) => {
     if (activeTab === 'all') return true;
     return item.category === activeTab;
   });
