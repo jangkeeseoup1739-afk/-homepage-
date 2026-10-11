@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cheongna-tiamo-casa.vercel.app/sitemap.xml
